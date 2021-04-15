@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "LightTown Chrome Extension",
+  "version": "0.0.1",
+  "background": {
+    "page": "background/index.html",
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "LightTown",
+    "default_popup": "popup/index.html"
+  },
+  "permissions": ["tabs", "activeTab", "storage"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
