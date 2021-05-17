@@ -28,7 +28,7 @@
     "css-loader": "^5.2.1",
     "extension-build-webpack-plugin": "^1.1.7",
     "html-webpack-plugin": "^5.3.1",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.0",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
     "vue-loader": "^15.9.6",
@@ -37,6 +37,10 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "vue": "^2.6.12"
+    "@light-town/ui": "^0.1.2",
+    "axios": "^0.21.1",
+    "uuid": "^3.4.0",
+    "vue": "^2.6.12",
+    "vue-svg-loader": "^0.16.0"
   }
 }

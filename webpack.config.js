@@ -23,14 +23,24 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/popup/index.html",
       filename: "popup/index.html",
+      chunks: ["popup/index"],
     }),
     new HtmlWebpackPlugin({
       template: "./src/background/index.html",
       filename: "background/index.html",
+      chunks: ["background/index"],
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: path.resolve(__dirname, "src", "manifest.json") }],
     }),
+    /* new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "background/index.js"),
+          to: "background.js",
+        },
+      ],
+    }), */
 
     /*  new ExtensionBuildWebpackPlugin({
       devMode: true,
@@ -42,6 +52,10 @@ module.exports = {
   ],
   module: {
     rules: [
+      {
+        test: /\.svg$/,
+        use: ["vue-loader", "vue-svg-loader"],
+      },
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
