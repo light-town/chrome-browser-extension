@@ -1,0 +1,64 @@
+#app[data-theme-mode="light"] {
+  --color-search-bar-input-icon: var(--color-green-400);
+  --color-search-bar-tool-btn-icon-fill: var(--color-gray-650);
+  --color-search-bar-border: var(--color-gray-150);
+}
+
+.search-bar {
+  padding: 1rem 1.25rem;
+
+  border-bottom: 1px solid var(--color-search-bar-border);
+
+  &__input {
+    flex: 0 1 100%;
+
+    font-size: 1.75em;
+    font-weight: 400;
+
+    padding: 0 1.25rem;
+
+    border-color: transparent;
+
+    &:focus {
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &-icon {
+      --size: 1.75rem;
+
+      width: var(--size);
+      height: var(--size);
+
+      fill: var(--color-search-bar-input-icon);
+    }
+  }
+
+  &__tools {
+    display: inline-flex;
+    width: auto;
+  }
+
+  &__settings-btn {
+    --size: 2.5rem;
+
+    padding: 0;
+
+    width: var(--size);
+    height: var(--size);
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    &-icon {
+      --size: 1.5rem;
+
+      width: var(--size);
+      height: var(--size);
+
+      fill: var(--color-search-bar-tool-btn-icon-fill);
+    }
+  }
+}

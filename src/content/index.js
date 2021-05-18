@@ -1,13 +1,28 @@
-/* document.addEventListener("DOMContentLoaded", (event) => { */
-/* chrome.runtime.onMessage.addListener((msg) => {
-    console.log(msg);
-  }); */
+/* import "core-js/stable";
+import "regenerator-runtime/runtime";
 
-chrome.extension.onConnect.addListener(function(port) {
-  console.log("Connected...");
+document.addEventListener("DOMContentLoaded", async () => {
+  debugger;
 
-  port.onMessage.addListener(function(msg) {
-    console.log(msg);
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+
+  const fromPageLocalStore = await chrome.tabs.executeScript(tab.id, {
+    code: `localStorage[lastAccountUuid]`,
   });
 });
-/* }); */
+ */
+
+/* import "core-js/stable";
+import "regenerator-runtime/runtime";
+
+document.addEventListener("DOMContentLoaded", async (event) => {
+  debugger;
+
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+
+  const fromPageLocalStore = await chrome.tabs.executeScript(tab.id, {
+    code: `localStorage[lastAccountUuid]`,
+  });
+}); */

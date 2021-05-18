@@ -1,12 +1,13 @@
 <template>
-  <ui-grid>
-    <input type="text" placeholder="Enter Master Password" />
-    <button @click="login">Login</button>
+  <ui-grid id="app" data-theme-mode="light" class="app-page">
+    <ui-grid id="app-page-layout" class="w-full h-full">
+      <router-view></router-view>
+    </ui-grid>
+    <portal-target name="modals-location" multiple> </portal-target>
   </ui-grid>
 </template>
 
 <script>
-// import UiGrid from "@light-town/ui/src/grid/index.vue";
 import { UiGrid } from "@light-town/ui";
 
 export default {
@@ -14,33 +15,37 @@ export default {
   components: {
     UiGrid,
   },
-  methods: {
-    login() {
-      console.log("logining...");
-
-      /* chrome.runtime.sendMessage({ command: "login" }, (response) => {
-        console.log(response);
-      }); */
-
-      /*  chrome.tabs.getCurrent(function(tab) {
-        chrome.tabs.sendMessage(tab.id, { type: "getText" }, function(
-          response
-        ) {
-          alert(response);
-          $("#text").text(response);
-        });
-      }); */
-
-      const port = chrome.extension.connect({
-        name: "Sample Communication",
-      });
-      port.postMessage({ command: "login" });
-      /* port.onMessage.addListener(function(msg) {
-        console.log("message recieved" + msg);
-      }); */
-    },
+  created() {
+    this.$router.push("/sign-in");
+    // this.$router.push("/items");
+    // this.$router.push("/items/fdsf0ds-fsdsf-ds-fsd-f-sdf");
   },
 };
 </script>
 
-<style lang="sass"></style>
+<style lang="scss">
+@import url("@light-town/ui/assets/css/main.scss");
+@import url("@light-town/ui/dist/lib.css");
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+* {
+  user-select: none !important;
+
+  &:focus {
+    outline-style: none !important;
+  }
+}
+
+.app-page {
+  width: 600px;
+  height: 450px;
+
+  flex-shrink: 0;
+  flex-grow: 0;
+
+  overflow: hidden;
+}
+</style>

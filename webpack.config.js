@@ -2,24 +2,15 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-/* const ExtensionBuildWebpackPlugin = require("extension-build-webpack-plugin"); */
-/* const ChromeExtensionReloader = require("webpack-chrome-extension-reloader"); */
 
 module.exports = {
   entry: {
     "popup/index": path.resolve(__dirname, "src", "popup/index.js"),
     "background/index": path.resolve(__dirname, "src", "background/index.js"),
+    "content/index": path.resolve(__dirname, "src", "content/index.js"),
   },
   mode: "development",
   plugins: [
-    /* new ChromeExtensionReloader({
-      port: 9090,
-      reloadPage: true,
-      entries: {
-        contentScript: "content-script",
-        background: "background",
-      },
-    }), */
     new HtmlWebpackPlugin({
       template: "./src/popup/index.html",
       filename: "popup/index.html",
@@ -33,28 +24,21 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{ from: path.resolve(__dirname, "src", "manifest.json") }],
     }),
-    /* new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "src", "background/index.js"),
-          to: "background.js",
-        },
-      ],
-    }), */
-
-    /*  new ExtensionBuildWebpackPlugin({
-      devMode: true,
-      name: "my-first-webpack.zip",
-      directory: "src",
-      updateType: "minor",
-    }), */
     new VueLoaderPlugin(),
   ],
+  resolve: {
+    alias: {
+      vue$: "vue/dist/vue.esm.js",
+      "@": path.resolve(__dirname, "src"),
+      "~": path.resolve(__dirname, "src"),
+    },
+    extensions: ["*", ".js", ".vue", ".json"],
+  },
   module: {
     rules: [
       {
         test: /\.svg$/,
-        use: ["vue-loader", "vue-svg-loader"],
+        use: ["babel-loader", "vue-svg-loader"],
       },
       {
         test: /\.m?js$/,
@@ -76,7 +60,12 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader"],
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader",
+        ],
       },
     ],
   },

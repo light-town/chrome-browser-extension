@@ -1,0 +1,9 @@
+#app[data-theme-mode="light"] {
+  --color-item-page-body-header-icon-bg: var(--color-white);
+}
+
+.item-page-body {
+  &__header {
+    background-color: var(--color-item-page-body-header-icon-bg);
+  }
+}
