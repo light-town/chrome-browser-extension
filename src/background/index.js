@@ -8,17 +8,20 @@ import DevicesService from "~/services/devices.service";
 
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 import * as StoredDataTypes from "../enums/stored-data-types.enum";
+import KeySetsService from "~/services/key-sets.sevice";
 
 async function bootstrap() {
   const idleService = new IdleService();
   const protectedMemoryService = new ProtectedMemoryService();
   const authService = new AuthService();
   const devicesService = new DevicesService(protectedMemoryService);
+  const keySetsService = new KeySetsService();
 
   await protectedMemoryService.init();
   await idleService.init();
   await authService.init();
   await devicesService.init();
+  await keySetsService.init();
 
   idleService.onStateChanged.addListener((newState) => {
     if (newState === QueryState.IDLE) {
@@ -103,6 +106,20 @@ async function bootstrap() {
 
         break;
       }
+      case MessageTypesEnum.GET_MUK_REQUEST: {
+        const muk = await protectedMemoryService.getItem(StoredDataTypes.MUK, {
+          parseJson: true,
+        });
+
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.GET_MUK_RESPONSE,
+          data: {
+            muk,
+          },
+        });
+
+        break;
+      }
       case MessageTypesEnum.CREATE_SESSION_REQUEST: {
         const password = data?.password;
 
@@ -128,16 +145,29 @@ async function bootstrap() {
         });
 
         const verifiedSession = await authService.startSession(session);
+        const sessionToken = verifiedSession?.token;
 
         await protectedMemoryService.setItem(
           StoredDataTypes.SESSION_TOKEN,
-          verifiedSession?.token
+          sessionToken
         );
+
+        await authService.authorize(sessionToken);
+
+        const muk = await keySetsService.deriveMasterUnlockKey(
+          currentAccount.accountUuid,
+          currentAccount.accountKey,
+          password
+        );
+
+        await protectedMemoryService.setItem(StoredDataTypes.MUK, muk, {
+          json: true,
+        });
 
         chrome.runtime.sendMessage({
           type: MessageTypesEnum.CREATE_SESSION_RESPONSE,
           data: {
-            sessionToken: verifiedSession?.token,
+            sessionToken,
           },
         });
 

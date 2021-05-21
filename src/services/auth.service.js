@@ -66,4 +66,8 @@ export default class AuthService {
 
     return response.data["X-CSRF-TOKEN"];
   }
+
+  async authorize(token) {
+    AxiosService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
 }

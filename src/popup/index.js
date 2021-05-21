@@ -70,12 +70,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // save session token into local state
 
-        router.push("/items");
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.GET_MUK_REQUEST,
+        });
 
         break;
       }
       case MessageTypesEnum.CREATE_SESSION_RESPONSE: {
         // save session token into local state
+
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.GET_MUK_REQUEST,
+        });
+
+        break;
+      }
+      case MessageTypesEnum.GET_MUK_RESPONSE: {
+        // save muk into local state
 
         router.push("/items");
 
