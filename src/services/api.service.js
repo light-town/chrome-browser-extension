@@ -1,5 +1,4 @@
 import axios from "./axios.service";
-
 export class Auth {
   createSession({ accountKey, deviceUuid }) {
     return axios
@@ -34,8 +33,15 @@ export class Auth {
   }
 }
 
+export class Devices {
+  registerDevice({ os }) {
+    return axios.post("/devices", { os }).then((response) => response.data);
+  }
+}
+
 export class Api {
   auth = new Auth();
+  devices = new Devices();
 }
 
 export default new Api();

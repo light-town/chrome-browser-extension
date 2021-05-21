@@ -4,24 +4,26 @@ export const QueryState = {
   ACTIVE: "active",
 };
 
-// export const IDLE_INTERVAL = 60; // 60 seconds
 export const IDLE_INTERVAL = 20; // 20 seconds
 
 export default class IdleService {
   constructor() {
     this.idle = chrome.idle;
-    this.timer = null;
     this.state = QueryState.ACTIVE;
+    this.listeners = new Set();
+    this.onStateChanged = {
+      addListener: (l) => {
+        this.listeners.add(l);
+      },
+    };
   }
 
   init() {
     if (!this.idle) return;
 
     this.idle.setDetectionInterval(IDLE_INTERVAL);
-    this.idle.onStateChanged.addListener(this.onStateChanged);
-  }
-
-  onStateChanged(newState) {
-    console.log(newState);
+    this.idle.onStateChanged.addListener((newState) => {
+      this.listeners.forEach((l) => l(newState));
+    });
   }
 }

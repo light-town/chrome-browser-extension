@@ -13,10 +13,9 @@
   },
   "content_scripts": [
     {
-      "all_frames": true,
       "js": ["content/index.js"],
       "matches": ["http://127.0.0.1:3000/sign-in/pwd"],
-      "run_at": "document_start"
+      "run_at": "document_end"
     }
   ],
   "permissions": [
@@ -25,7 +24,8 @@
     "storage",
     "idle",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "file:///*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

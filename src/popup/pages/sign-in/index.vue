@@ -16,6 +16,7 @@
     >
       <ui-input
         ref="input"
+        v-model="password"
         type="password"
         placeholder="Enter your Master Password"
         class="sign-in-page__input"
@@ -40,6 +41,7 @@
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
 import LogoIcon from "~/assets/logo.svg";
 import UnlockIcon from "~/assets/unlock.svg";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 export default {
   name: "SignInPage",
@@ -52,6 +54,7 @@ export default {
   },
   data() {
     return {
+      password: "",
       loading: false,
       focused: false,
     };
@@ -66,9 +69,12 @@ export default {
     signIn() {
       this.loading = true;
 
-      this.$router.push("/items");
-
-      this.loading = false;
+      chrome.runtime.sendMessage({
+        type: MessageTypesEnum.CREATE_SESSION_REQUEST,
+        data: {
+          password: this.password,
+        },
+      });
     },
     setInputFieldFocus() {
       this.focused = true;

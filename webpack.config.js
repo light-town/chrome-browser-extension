@@ -43,16 +43,26 @@ module.exports = {
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-          },
-        },
+        loader: "babel-loader",
       },
       {
         test: /\.vue$/,
         loader: "vue-loader",
+        options: {
+          loaders: {
+            scss: [
+              "vue-style-loader",
+              "css-loader",
+              "postcss-loader",
+              "sass-loader",
+            ],
+            sass: [
+              "vue-style-loader",
+              "css-loader",
+              "sass-loader?indentedSyntax",
+            ],
+          },
+        },
       },
       {
         test: /\.css$/,
@@ -65,6 +75,15 @@ module.exports = {
           "css-loader",
           "postcss-loader",
           "sass-loader",
+        ],
+      },
+      {
+        test: /\.sass$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader?indentedSyntax",
         ],
       },
     ],

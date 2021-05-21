@@ -1,7 +1,14 @@
 import core from "@light-town/core";
 import api from "./api.service";
 
+import AxiosService from "../services/axios.service";
 export default class AuthService {
+  async init() {
+    const csrfToken = await this.getCsrfToken();
+
+    AxiosService.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+  }
+
   async createSession(deviceUuid, accountKey, password) {
     const response = await api.auth.createSession({
       accountKey: accountKey,
@@ -35,7 +42,7 @@ export default class AuthService {
   }
 
   async startSession(session) {
-    const response = await this.$api.auth.startSession(session.uuid, {
+    const response = await api.auth.startSession(session.uuid, {
       clientPublicEphemeralKey: session.ephemeralKeyPair.public,
       clientSessionProofKey: session.srp.proof,
     });
@@ -50,5 +57,13 @@ export default class AuthService {
       uuid: session.uuid,
       token: response.data.token,
     };
+  }
+
+  async getCsrfToken() {
+    const response = await api.auth.getCsrfToken();
+
+    if (response.statusCode !== 200) return;
+
+    return response.data["X-CSRF-TOKEN"];
   }
 }

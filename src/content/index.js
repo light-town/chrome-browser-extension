@@ -1,28 +1,32 @@
-/* import "core-js/stable";
+import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-document.addEventListener("DOMContentLoaded", async () => {
-  debugger;
+import * as MessageTypesEnum from "../enums/message-types.enum";
 
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const tab = tabs[0];
+import Vue from "vue";
+import ProposalNotification from "./components/proposal-notification/index.vue";
 
-  const fromPageLocalStore = await chrome.tabs.executeScript(tab.id, {
-    code: `localStorage[lastAccountUuid]`,
-  });
+chrome.runtime.onMessage.addListener(({ type }) => {
+  console.log("[Content Script] Message Type: ", type);
+
+  switch (type) {
+    case MessageTypesEnum.MAKE_PROPOSAL: {
+      const layoutId = "lt-ext-notifs";
+
+      const layout = document.createElement("div");
+      layout.setAttribute("id", layoutId);
+
+      document.querySelector("#app").appendChild(layout);
+
+      new Vue({
+        el: `#${layoutId}`,
+        render: (h) => h(ProposalNotification),
+      });
+      break;
+    }
+  }
 });
- */
 
-/* import "core-js/stable";
-import "regenerator-runtime/runtime";
-
-document.addEventListener("DOMContentLoaded", async (event) => {
-  debugger;
-
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const tab = tabs[0];
-
-  const fromPageLocalStore = await chrome.tabs.executeScript(tab.id, {
-    code: `localStorage[lastAccountUuid]`,
-  });
-}); */
+chrome.runtime.sendMessage(chrome.runtime.id, {
+  type: MessageTypesEnum.CHECK_PROPOSAL_NEED,
+});

@@ -1,29 +1,150 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-import IdleService from "../services/idle.service";
+import IdleService, { QueryState } from "../services/idle.service";
+import ProtectedMemoryService from "../services/protected-memory.service";
+import AuthService from "~/services/auth.service";
+import DevicesService from "~/services/devices.service";
 
-function bootstrap() {
+import * as MessageTypesEnum from "~/enums/message-types.enum";
+import * as StoredDataTypes from "../enums/stored-data-types.enum";
+
+async function bootstrap() {
   const idleService = new IdleService();
+  const protectedMemoryService = new ProtectedMemoryService();
+  const authService = new AuthService();
+  const devicesService = new DevicesService(protectedMemoryService);
 
-  idleService.init();
-}
-bootstrap();
+  await protectedMemoryService.init();
+  await idleService.init();
+  await authService.init();
+  await devicesService.init();
 
-document.addEventListener("DOMContentLoaded", () => {
-  chrome.tabs.onActivated.addListener((info) => {
-    chrome.tabs.get(info.tabId, (tab) => {
-      if (tab.url !== "http://127.0.0.1:3000/sign-in/pwd") return;
-
-      chrome.tabs.executeScript(
-        tab.id,
-        {
-          code: `localStorage.getItem('lastAccountUuid')`,
-        },
-        (d) => {
-          console.log(d);
-        }
-      );
-    });
+  idleService.onStateChanged.addListener((newState) => {
+    if (newState === QueryState.IDLE) {
+      protectedMemoryService.removeItem(StoredDataTypes.SESSION);
+      protectedMemoryService.removeItem(StoredDataTypes.SESSION_TOKEN);
+    }
   });
-});
+
+  chrome.runtime.onMessage.addListener(async ({ type, data }, { tab }) => {
+    console.log("[Background Script] Message Type: ", type);
+
+    switch (type) {
+      case MessageTypesEnum.CHECK_PROPOSAL_NEED: {
+        if (!tab) return;
+
+        const currentAccount = await protectedMemoryService.getItem(
+          StoredDataTypes.CURRENT_ACCOUNT,
+          { parseJson: true }
+        );
+
+        if (currentAccount?.accountUuid) {
+          chrome.tabs.sendMessage(tab.id, {
+            type: MessageTypesEnum.NOT_NEED_PROPOSAL,
+          });
+        } else {
+          chrome.tabs.sendMessage(tab.id, {
+            type: MessageTypesEnum.MAKE_PROPOSAL,
+          });
+        }
+
+        break;
+      }
+      case MessageTypesEnum.PROPOSAL_ACCEPTED: {
+        chrome.tabs.executeScript(
+          tab.id,
+          {
+            code:
+              'const lastAccountUuid = localStorage.getItem("lastAccountUuid"); localStorage.getItem(`account-${lastAccountUuid}`);',
+          },
+          async (data) => {
+            if (!data.length || !data[0]) return;
+
+            const currentAccount = data[0];
+
+            protectedMemoryService.setItem(
+              StoredDataTypes.CURRENT_ACCOUNT,
+              currentAccount
+            );
+          }
+        );
+
+        break;
+      }
+      case MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST: {
+        const currentAccount = await protectedMemoryService.getItem(
+          StoredDataTypes.CURRENT_ACCOUNT,
+          {
+            parseJson: true,
+          }
+        );
+
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE,
+          data: {
+            account: currentAccount,
+          },
+        });
+
+        break;
+      }
+      case MessageTypesEnum.GET_SESSION_TOKEN_REQUEST: {
+        const sessionToken = await protectedMemoryService.getItem(
+          StoredDataTypes.SESSION_TOKEN
+        );
+
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.GET_SESSION_TOKEN_RESPONSE,
+          data: {
+            sessionToken,
+          },
+        });
+
+        break;
+      }
+      case MessageTypesEnum.CREATE_SESSION_REQUEST: {
+        const password = data?.password;
+
+        if (!password) return;
+
+        const [device, currentAccount] = await Promise.all([
+          protectedMemoryService.getItem(StoredDataTypes.DEVICE, {
+            parseJson: true,
+          }),
+          protectedMemoryService.getItem(StoredDataTypes.CURRENT_ACCOUNT, {
+            parseJson: true,
+          }),
+        ]);
+
+        const session = await authService.createSession(
+          device.uuid,
+          currentAccount.accountKey,
+          password
+        );
+
+        await protectedMemoryService.setItem(StoredDataTypes.SESSION, session, {
+          json: true,
+        });
+
+        const verifiedSession = await authService.startSession(session);
+
+        await protectedMemoryService.setItem(
+          StoredDataTypes.SESSION_TOKEN,
+          verifiedSession?.token
+        );
+
+        chrome.runtime.sendMessage({
+          type: MessageTypesEnum.CREATE_SESSION_RESPONSE,
+          data: {
+            sessionToken: verifiedSession?.token,
+          },
+        });
+
+        break;
+      }
+    }
+  });
+}
+
+bootstrap();

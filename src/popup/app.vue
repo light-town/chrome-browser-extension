@@ -15,11 +15,6 @@ export default {
   components: {
     UiGrid,
   },
-  created() {
-    this.$router.push("/sign-in");
-    // this.$router.push("/items");
-    // this.$router.push("/items/fdsf0ds-fsdsf-ds-fsd-f-sdf");
-  },
 };
 </script>
 

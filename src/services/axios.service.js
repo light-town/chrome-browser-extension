@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const axios = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+const API_URL = "http://127.0.0.1:8080/v1/api";
+
+const instance = axios.create({
+  baseURL: API_URL,
 });
 
-axios.interceptors.request.use((config) => {
-  console.log(config);
+instance.interceptors.request.use((config) => {
   return config;
 });
 
-export default axios;
+export default instance;
