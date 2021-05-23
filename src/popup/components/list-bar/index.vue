@@ -29,16 +29,28 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { mapState } from "vuex";
 import { UiGrid, UiAvatar, UiSelect, UiButton } from "@light-town/ui";
 
-export default {
+export default Vue.extend({
   name: "ListBar",
   components: {
     UiGrid,
     UiAvatar,
     UiSelect,
     UiButton,
+  },
+  computed: {
+    ...mapState({
+      items: (state: any) =>
+        Object.values(state.vaultItems.all).map((i: any) => ({
+          uuid: i.uuid,
+          name: i.overview.fields.find((f) => f.fieldName === "Avatar").value,
+          desc: i.overview.fields.find((f) => f.fieldName === "Username").value,
+        })),
+    }),
   },
   data() {
     return {
@@ -53,62 +65,14 @@ export default {
           name: "Suggestions",
         },
       ],
-      items: [
-        {
-          uuid: "1",
-          name: "Google",
-          desc: "some@gmail.com",
-          active: true,
-        },
-        {
-          uuid: "2",
-          name: "Amazon",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "3",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "4",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "5",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "6",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "7",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-        {
-          uuid: "8",
-          name: "Yandex",
-          desc: "some@gmail.com",
-          active: false,
-        },
-      ],
     };
   },
   created() {
     this.selectedItemCategory = this.itemCategories[0];
+
+    console.log(this.items);
   },
-};
+});
 </script>
 
 <style lang="scss" src="./index.scss"></style>

@@ -5,9 +5,9 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
-    "popup/index": path.resolve(__dirname, "src", "popup/index.js"),
-    "background/index": path.resolve(__dirname, "src", "background/index.js"),
-    "content/index": path.resolve(__dirname, "src", "content/index.js"),
+    "popup/index": path.resolve(__dirname, "src", "popup/index.ts"),
+    "background/index": path.resolve(__dirname, "src", "background/index.ts"),
+    "content/index": path.resolve(__dirname, "src", "content/index.ts"),
   },
   mode: "development",
   plugins: [
@@ -29,10 +29,10 @@ module.exports = {
   resolve: {
     alias: {
       vue$: "vue/dist/vue.esm.js",
-      "@": path.resolve(__dirname, "src"),
-      "~": path.resolve(__dirname, "src"),
+      "@/": path.resolve(__dirname, "src"),
+      "~/": path.resolve(__dirname, "src"),
     },
-    extensions: ["*", ".js", ".vue", ".json"],
+    extensions: ["*", ".js", ".vue", ".json", ".ts"],
   },
   module: {
     rules: [
@@ -41,9 +41,19 @@ module.exports = {
         use: ["babel-loader", "vue-svg-loader"],
       },
       {
-        test: /\.m?js$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader",
+      },
+      {
+        test: /\.ts$/,
+        use: [
+          "babel-loader",
+          {
+            loader: "ts-loader",
+            options: { appendTsSuffixTo: [/\.vue$/] },
+          },
+        ],
       },
       {
         test: /\.vue$/,
@@ -61,6 +71,7 @@ module.exports = {
               "css-loader",
               "sass-loader?indentedSyntax",
             ],
+            ts: "babel-loader!ts-loader",
           },
         },
       },

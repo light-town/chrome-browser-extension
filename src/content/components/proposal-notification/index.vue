@@ -39,11 +39,13 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+/// @ts-ignore
 import { UiGrid, UiButton } from "@light-town/ui";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 
-export default {
+export default Vue.extend({
   name: "ProposalNotification",
   components: {
     UiGrid,
@@ -66,7 +68,7 @@ export default {
       this.show = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" src="./index.scss"></style>

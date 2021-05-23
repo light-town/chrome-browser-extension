@@ -1,9 +1,62 @@
 #app[data-theme-mode="light"] {
   --color-item-page-body-header-icon-bg: var(--color-white);
+
+  --color-item-page-body-header-title: var(--color-gray-650);
+  --color-item-page-body-header-desc: var(--color-gray-450);
+
+  --color-item-field-title: var(--color-green-400);
+  --color-item-field-value: var(--color-gray-450);
 }
 
 .item-page-body {
   &__header {
-    background-color: var(--color-item-page-body-header-icon-bg);
+    &-icon {
+      flex-shrink: 0;
+
+      background-color: var(--color-item-page-body-header-icon-bg);
+
+      margin-right: 1.25rem;
+    }
+
+    &-title {
+      font-size: 1.75em;
+      font-weight: 600;
+
+      color: var(--color-item-page-body-header-title);
+    }
+
+    &-desc {
+      font-size: 13px;
+    }
+
+    &-btn {
+      font-size: 1.25em;
+
+      flex-shrink: 0;
+
+      padding: 0.25em 0.75em;
+    }
+  }
+}
+
+.item-field {
+  padding: 0.625rem 1.25rem;
+
+  &__title {
+    font-size: 14px;
+    font-weight: 500;
+
+    color: var(--color-item-field-title);
+  }
+
+  &__value {
+    font-size: 16px;
+    font-weight: 500;
+
+    color: var(--color-item-field-value);
+  }
+
+  &__primary {
+    background-color: var(--color-item-)
   }
 }

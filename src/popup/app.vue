@@ -7,15 +7,16 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { UiGrid } from "@light-town/ui";
 
-export default {
+export default Vue.extend({
   name: "App",
   components: {
     UiGrid,
   },
-};
+});
 </script>
 
 <style lang="scss">

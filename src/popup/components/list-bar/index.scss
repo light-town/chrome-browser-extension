@@ -15,9 +15,13 @@
 }
 
 .list-bar {
+  width: 250px;
   height: 100%;
 
   overflow: auto;
+
+  flex-grow: 0;
+  flex-shrink: 0;
 
   border-right: 1px solid var(--color-list-bar-border);
 

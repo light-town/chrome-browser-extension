@@ -12,12 +12,15 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
+/// @ts-ignore
 import LoupeIcon from "~/assets/loupe.svg";
+/// @ts-ignore
 import SettingsIcon from "~/assets/settings.svg";
 
-export default {
+export default Vue.extend({
   name: "SearchBar",
   components: {
     UiGrid,
@@ -26,7 +29,7 @@ export default {
     LoupeIcon,
     SettingsIcon,
   },
-};
+});
 </script>
 
 <style lang="scss" src="./index.scss"></style>

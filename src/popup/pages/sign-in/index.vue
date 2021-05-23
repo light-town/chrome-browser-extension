@@ -37,13 +37,16 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
+/// @ts-ignore
 import LogoIcon from "~/assets/logo.svg";
+/// @ts-ignore
 import UnlockIcon from "~/assets/unlock.svg";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 
-export default {
+export default Vue.extend({
   name: "SignInPage",
   components: {
     UiGrid,
@@ -84,7 +87,7 @@ export default {
       this.focused = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" src="./index.scss"></style>

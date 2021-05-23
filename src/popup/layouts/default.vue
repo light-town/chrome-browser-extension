@@ -10,19 +10,20 @@
   </ui-grid>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { UiGrid } from "@light-town/ui";
 import SearchBar from "~/popup/components/search-bar/index.vue";
 import ListBar from "~/popup/components/list-bar/index.vue";
 
-export default {
+export default Vue.extend({
   name: "DefaultLayout",
   components: {
     UiGrid,
     SearchBar,
     ListBar,
   },
-};
+});
 </script>
 
 <style lang="scss">

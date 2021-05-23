@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
@@ -16,7 +17,7 @@ chrome.runtime.onMessage.addListener(({ type }) => {
       const layout = document.createElement("div");
       layout.setAttribute("id", layoutId);
 
-      document.querySelector("#app").appendChild(layout);
+      document.querySelector("#app")?.appendChild(layout);
 
       new Vue({
         el: `#${layoutId}`,

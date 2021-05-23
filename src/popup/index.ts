@@ -1,41 +1,17 @@
+import "reflect-metadata";
 import Vue from "vue";
-import Vuex from "vuex";
-import VueRouter from "vue-router";
 import PortalVue from "portal-vue";
 import App from "./app.vue";
-import SignInPage from "./pages/sign-in/index.vue";
-import ItemsPage from "./pages/items/index.vue";
-import ItemPage from "./pages/item/index.vue";
+import store from "./store";
+import router from "./router";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
-import account from "./store/account";
 import * as accountActionTypes from "./store/account/types";
+import * as vaultItemActionTypes from "./store/vault-items/types";
+import LoggerService from "~/services/logger.service";
 
-Vue.use(VueRouter);
 Vue.use(PortalVue);
-Vue.use(Vuex);
-
-const store = new Vuex.Store({
-  modules: {
-    account,
-  },
-});
 
 document.addEventListener("DOMContentLoaded", () => {
-  const routes = [
-    { path: "/popup/index.html", component: App },
-    { path: "/index.html", component: App },
-    { path: "/", component: App },
-    { path: "/sign-in", component: SignInPage },
-    { path: "/items", component: ItemsPage },
-    { path: "/items/:itemUuid", component: ItemPage },
-  ];
-
-  const router = new VueRouter({
-    base: "/popup/index.html",
-    mode: "history",
-    routes,
-  });
-
   new Vue({
     el: "#app",
     router,
@@ -43,13 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     render: (h) => h(App),
   });
 
+  const loggerService = new LoggerService();
+
   chrome.runtime.onMessage.addListener(({ type, data }) => {
-    console.log("[Popup Script] Message Type: ", type, data);
+    loggerService.log("Popup Script", "Message Type", type, data);
 
     switch (type) {
       case MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE: {
         if (!data.account) {
-          // redirect to Light Town Website
+          // redirect to Light Town Website !!!
           return window.close();
         }
 
@@ -68,28 +46,30 @@ document.addEventListener("DOMContentLoaded", () => {
           return router.push("/sign-in");
         }
 
-        // save session token into local state
+        // save session token into local state ???
 
         chrome.runtime.sendMessage({
-          type: MessageTypesEnum.GET_MUK_REQUEST,
+          type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
         });
 
         break;
       }
       case MessageTypesEnum.CREATE_SESSION_RESPONSE: {
-        // save session token into local state
+        // save session token into local state ???
 
         chrome.runtime.sendMessage({
-          type: MessageTypesEnum.GET_MUK_REQUEST,
+          type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
         });
 
         break;
       }
-      case MessageTypesEnum.GET_MUK_RESPONSE: {
-        // save muk into local state
+      case MessageTypesEnum.GET_VAULT_ITEMS_RESPONSE: {
+        store.dispatch(vaultItemActionTypes.SET_VAULT_ITEMS, {
+          items: data.items,
+        });
 
-        router.push("/items");
-
+        if (data.items.length) router.push(`/items/${data.items[0].uuid}`);
+        else router.push(`/items`);
         break;
       }
     }
