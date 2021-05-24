@@ -44,7 +44,7 @@ export default class Auth {
 
   resfreshToken(sessionUuid) {
     return this.axiosService.instance
-      .get(`/auth/sessions/${sessionUuid}/refresh-token`)
+      .post(`/auth/sessions/${sessionUuid}/refresh-token`)
       .then((response) => response.data);
   }
 }

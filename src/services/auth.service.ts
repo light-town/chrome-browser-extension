@@ -113,13 +113,14 @@ export class AuthService {
     this.storageService.setItem(StoredDataTypesEnum.CURRENT_ACCOUNT, val);
   }
 
-  async refresh() {
-    const sessionUuid = "";
-    const response = await this.apiService.auth.resfreshToken(sessionUuid);
+  async refresh(session) {
+    const response = await this.apiService.auth.resfreshToken(session.uuid);
 
     if (response.statusCode !== 201) {
       return null;
     }
+
+    debugger;
 
     return response.data.token;
   }

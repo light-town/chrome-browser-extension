@@ -30,4 +30,12 @@ export default class VaultsService {
 
     return response.data;
   }
+
+  async getVaultById(id): Promise<Vault> {
+    const response = await this.apiService.vaults.getVaultById(id);
+
+    if (response?.statusCode !== 200) return Promise.reject();
+
+    return response.data;
+  }
 }

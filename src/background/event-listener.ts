@@ -214,6 +214,54 @@ export default class EventListener {
 
           break;
         }
+        case MessageTypesEnum.GET_VAULT_ITEM_REQUEST: {
+          const muk = await this.protectedMemoryService.getItem(
+            StoredDataTypesEnum.MUK,
+            { parseJson: true }
+          );
+
+          const encItem = await this.vaultItemsService.getItem(data?.uuid);
+          const encVault = await this.vaultsService.getVaultById(
+            encItem.vaultUuid
+          );
+
+          const keySets = await this.keySetsService.getKeySets(muk);
+
+          const keySet = keySets.find((ks) => ks.uuid === encVault.keySetUuid);
+
+          if (!keySet) return;
+
+          let vault: Vault;
+
+          if (keySet.isPrimary)
+            vault = <any>(
+              await core.helpers.vaults.decryptVaultByPrivateKeyHelper(
+                encVault,
+                keySet.privateKey
+              )
+            );
+          else
+            vault = <any>(
+              await core.helpers.vaults.decryptVaultBySecretKeyHelper(
+                encVault,
+                keySet.symmetricKey
+              )
+            );
+
+          const item = await core.helpers.vaultItems.decryptVaultItemHelper(
+            encItem,
+            vault.key
+          );
+
+          chrome.runtime.sendMessage({
+            type: MessageTypesEnum.GET_VAULT_ITEM_RESPONSE,
+            data: {
+              item,
+            },
+          });
+
+          break;
+        }
       }
     });
   }

@@ -72,6 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
         else router.push(`/items`);
         break;
       }
+      case MessageTypesEnum.GET_VAULT_ITEM_RESPONSE: {
+        store.dispatch(vaultItemActionTypes.SET_VAULT_ITEM, {
+          item: data.item,
+        });
+        break;
+      }
     }
   });
 

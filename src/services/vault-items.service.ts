@@ -15,4 +15,12 @@ export default class VaultItemsService {
 
     return response.data;
   }
+
+  async getItem(vaultItemUuid: string) {
+    const response = await this.apiService.vaultItems.getItem(vaultItemUuid);
+
+    if (response.statusCode !== 200) return;
+
+    return response.data;
+  }
 }

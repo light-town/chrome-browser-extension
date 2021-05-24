@@ -3,9 +3,6 @@
 
   --color-item-page-body-header-title: var(--color-gray-650);
   --color-item-page-body-header-desc: var(--color-gray-450);
-
-  --color-item-field-title: var(--color-green-400);
-  --color-item-field-value: var(--color-gray-450);
 }
 
 .item-page-body {
@@ -37,26 +34,8 @@
       padding: 0.25em 0.75em;
     }
   }
-}
 
-.item-field {
-  padding: 0.625rem 1.25rem;
-
-  &__title {
-    font-size: 14px;
-    font-weight: 500;
-
-    color: var(--color-item-field-title);
-  }
-
-  &__value {
-    font-size: 16px;
-    font-weight: 500;
-
-    color: var(--color-item-field-value);
-  }
-
-  &__primary {
-    background-color: var(--color-item-)
+  &__body {
+    padding: 0.25rem 0;
   }
 }

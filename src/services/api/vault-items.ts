@@ -13,4 +13,10 @@ export default class VaultItems {
       .get("/items?only-overview=true")
       .then((response) => response.data);
   }
+
+  getItem(vaultItemUuid: string) {
+    return this.axiosService.instance
+      .get(`/items/${vaultItemUuid}`)
+      .then((response) => response.data);
+  }
 }

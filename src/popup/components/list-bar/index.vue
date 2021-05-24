@@ -13,7 +13,8 @@
         :key="item.uuid"
         align-items="center"
         class="list-bar__list-item"
-        :class="{ 'list-bar__list-item_active': item.active }"
+        :class="{ 'list-bar__list-item_active': item.isActive }"
+        @click.native="selectItem(item.uuid)"
       >
         <ui-avatar
           :name="item.name"
@@ -31,8 +32,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { UiGrid, UiAvatar, UiSelect, UiButton } from "@light-town/ui";
+import * as vaultItemActionTypes from "~/popup/store/vault-items/types";
 
 export default Vue.extend({
   name: "ListBar",
@@ -44,12 +46,16 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
-      items: (state: any) =>
-        Object.values(state.vaultItems.all).map((i: any) => ({
+      currentVaultItemUuid: (state: any) =>
+        state.vaultItems.currentVaultItemUuid,
+      items(state: any) {
+        return Object.values(state.vaultItems.all).map((i: any) => ({
           uuid: i.uuid,
           name: i.overview.fields.find((f) => f.fieldName === "Avatar").value,
           desc: i.overview.fields.find((f) => f.fieldName === "Username").value,
-        })),
+          isActive: this.currentVaultItemUuid === i.uuid,
+        }));
+      },
     }),
   },
   data() {
@@ -71,6 +77,16 @@ export default Vue.extend({
     this.selectedItemCategory = this.itemCategories[0];
 
     console.log(this.items);
+  },
+  methods: {
+    ...mapActions({
+      setCurrentVaultItemUuid: vaultItemActionTypes.SET_CURRENT_VAULT_ITEM_UUID,
+      getVaultItem: vaultItemActionTypes.GET_VAULT_ITEM,
+    }),
+    selectItem(uuid: string) {
+      this.setCurrentVaultItemUuid({ uuid });
+      this.getVaultItem({ uuid });
+    },
   },
 });
 </script>

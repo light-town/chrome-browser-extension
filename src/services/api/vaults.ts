@@ -14,4 +14,10 @@ export default class Vaults {
       .get(`/vaults?ids=${q}`)
       .then((response) => response.data);
   }
+
+  getVaultById(id) {
+    return this.axiosService.instance
+      .get(`/vaults/${id}`)
+      .then((response) => response.data);
+  }
 }

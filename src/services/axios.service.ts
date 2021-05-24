@@ -1,31 +1,51 @@
-import {  inject, injectable, LazyServiceIdentifer,   } from 'inversify';
+import { inject, injectable } from 'inversify';
 import axios, { AxiosInstance } from "axios";
 import AuthService from './auth.service';
 import { lazyInject, TYPES } from './container';
+import LoggerService from './logger.service';
+import ProtectedMemoryService from './protected-memory.service';
+import * as StoredDataTypesEnum from "../enums/stored-data-types.enum";
 
 @injectable()
 export class AxiosService {
   #instance: AxiosInstance;
   #url = "http://127.0.0.1:8080/v1/api";
+  #refreshed = false;
 
   /// @ts-ignore
-  @lazyInject(AuthService) public authService: AuthService;
+  @lazyInject(TYPES.AuthService) public authService: AuthService;
 
-  constructor() {
+  constructor(
+    @inject(TYPES.LoggerService) 
+    private readonly logggerService: LoggerService, 
+    @inject(TYPES.ProtectedMemoryService) 
+    private readonly protectedMemoryService: ProtectedMemoryService
+  ) {
     const instance = axios.create({
       baseURL: this.#url,
     });
 
-    instance.interceptors.request.use((config) => {
-      return config;
-    });
+    instance.interceptors.response.use((response) => response, async (error) => {
+      if (error.response.status === 401) {
+        if (this.#refreshed) { this.#refreshed = false; return Promise.reject(error); } 
 
-    instance.interceptors.response.use(async (response) => {
-      if (response.status === 401) {
-        await this.authService.refresh();
-      }
+        const session = await this.protectedMemoryService.getItem(
+          StoredDataTypesEnum.SESSION,
+          {
+            parseJson: true,
+          }
+        );
 
-      return response;
+        debugger;
+
+        this.logggerService.log('Axios Service', '401 Error');
+
+        await this.authService.refresh(session);
+
+        this.#refreshed = true;
+
+      } else
+        return Promise.reject(error); 
     });
 
     this.#instance = instance;

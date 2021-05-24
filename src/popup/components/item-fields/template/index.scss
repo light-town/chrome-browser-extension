@@ -1,0 +1,128 @@
+#app[data-theme-mode="light"] {
+  --color-item-field-title: var(--color-green-400);
+  --color-item-field-value: var(--color-gray-450);
+  --color-item-field-bg: var(--color-white);
+  --color-item-field-border: var(--color-gray-150);
+
+  --color-item-field-tool-btns-bg: var(--color-green-50);
+
+  --color-item-field-tool-btn-bg: var(--color-gray-75);
+  --color-item-field-tool-btn-text: var(--color-green-400);
+  --color-item-field-tool-btn-border: var(--color-gray-150);
+
+  --color-item-field-primary-tool-btn-bg: var(--color-white);
+}
+
+.item-field {
+  position: relative;
+
+  padding: 0.5rem 1.125rem;
+
+  margin-top: 0.5rem;
+
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+
+  &__title {
+    font-size: 13px;
+    font-weight: 500;
+
+    color: var(--color-item-field-title);
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &__value {
+    width: 100%;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    color: var(--color-item-field-value);
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &_primary {
+    background-color: var(--color-item-field-bg);
+    border: 1px solid var(--color-item-field-border);
+
+    & .item-field__tool-btns {
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        var(--color-item-field-primary-tool-btn-bg) 80%,
+        var(--color-item-field-primary-tool-btn-bg) 100%
+      );
+    }
+  }
+
+  &:hover {
+    border: 1px solid var(--color-item-field-border);
+  }
+
+  &__tool-btns {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 0.5rem;
+
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      var(--color-item-field-tool-btn-bg) 80%,
+      var(--color-item-field-tool-btn-bg) 100%
+    );
+  }
+
+  &__tool-btn {
+    font-size: 15px;
+    font-weight: 700;
+
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    color: var(--color-item-field-tool-btn-text);
+
+    border: 0;
+    border-right: 1px solid var(--color-item-field-tool-btn-border);
+    border-radius: 0;
+
+    padding: 0.5em 0.75em;
+
+    background-color: transparent;
+
+    transition: background 0;
+
+    height: 100%;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+
+    &:first-child {
+      flex-grow: 1;
+
+      justify-content: flex-end;
+
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    &:last-child {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+
+      border-right-color: transparent;
+    }
+  }
+}
