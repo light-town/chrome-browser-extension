@@ -99,7 +99,7 @@ export class AuthService {
     return response.data["X-CSRF-TOKEN"];
   }
 
-  async authorize(token: string) {
+  authorize(token: string) {
     this.axiosService.instance.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${token}`;
@@ -116,11 +116,7 @@ export class AuthService {
   async refresh(session) {
     const response = await this.apiService.auth.resfreshToken(session.uuid);
 
-    if (response.statusCode !== 201) {
-      return null;
-    }
-
-    debugger;
+    if (response.statusCode !== 201) return null;
 
     return response.data.token;
   }

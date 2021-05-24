@@ -1,0 +1,41 @@
+#app[data-theme-mode="light"] {
+  --color-item-model-body-header-icon-bg: var(--color-white);
+
+  --color-item-model-body-header-title: var(--color-gray-650);
+  --color-item-model-body-header-desc: var(--color-gray-450);
+}
+
+.item-model {
+  &__header {
+    &-icon {
+      flex-shrink: 0;
+
+      background-color: var(--color-item-model-body-header-icon-bg);
+
+      margin-right: 1.25rem;
+    }
+
+    &-title {
+      font-size: 1.75em;
+      font-weight: 600;
+
+      color: var(--color-item-model-body-header-title);
+    }
+
+    &-desc {
+      font-size: 13px;
+    }
+
+    &-btn {
+      font-size: 1.25em;
+
+      flex-shrink: 0;
+
+      padding: 0.25em 0.75em;
+    }
+  }
+
+  &__body {
+    padding: 0.25rem 0;
+  }
+}

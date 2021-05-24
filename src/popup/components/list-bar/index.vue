@@ -8,24 +8,31 @@
       </template>
     </ui-select>
     <ui-grid direction="column" class="list-bar__list">
-      <ui-grid
-        v-for="item in items"
-        :key="item.uuid"
-        align-items="center"
-        class="list-bar__list-item"
-        :class="{ 'list-bar__list-item_active': item.isActive }"
-        @click.native="selectItem(item.uuid)"
-      >
-        <ui-avatar
-          :name="item.name"
-          :size="32"
-          class="list-bar__list-item-icon"
-        />
-        <ui-grid direction="column">
-          <p class="list-bar__list-item-text">{{ item.name }}</p>
-          <p class="list-bar__list-item-desc">{{ item.desc }}</p>
+      <template v-if="items.length">
+        <ui-grid
+          v-for="item in items"
+          :key="item.uuid"
+          align-items="center"
+          class="list-bar__list-item"
+          :class="{ 'list-bar__list-item_active': item.isActive }"
+          @click.native="selectItem(item.uuid)"
+        >
+          <ui-avatar
+            :name="item.name"
+            :size="32"
+            class="list-bar__list-item-icon"
+          />
+          <ui-grid direction="column">
+            <p class="list-bar__list-item-text">{{ item.name }}</p>
+            <p class="list-bar__list-item-desc">{{ item.desc }}</p>
+          </ui-grid>
         </ui-grid>
-      </ui-grid>
+      </template>
+      <template v-else>
+        <ui-grid align-items="center" justify="center" class="mt-5">
+          <p class="list-bar_empty">No items found</p>
+        </ui-grid>
+      </template>
     </ui-grid>
   </ui-grid>
 </template>
@@ -74,18 +81,42 @@ export default Vue.extend({
     };
   },
   created() {
-    this.selectedItemCategory = this.itemCategories[0];
-
-    console.log(this.items);
+    if (this.isItemPage()) this.selectedItemCategory = this.itemCategories[0];
+    else if (this.isSuggestionPage()) {
+      this.selectedItemCategory = this.itemCategories[1];
+    }
+  },
+  watch: {
+    selectedItemCategory() {
+      if (
+        this.selectedItemCategory?.name === "All Items" &&
+        !this.isItemPage()
+      ) {
+        this.getVaultItems();
+      } else if (
+        this.selectedItemCategory?.name === "Suggestions" &&
+        !this.isSuggestionPage()
+      ) {
+        this.getSuggestion();
+      }
+    },
   },
   methods: {
     ...mapActions({
       setCurrentVaultItemUuid: vaultItemActionTypes.SET_CURRENT_VAULT_ITEM_UUID,
       getVaultItem: vaultItemActionTypes.GET_VAULT_ITEM,
+      getSuggestion: vaultItemActionTypes.GET_SUGGESTIONS,
+      getVaultItems: vaultItemActionTypes.GET_VAULT_ITEMS,
     }),
     selectItem(uuid: string) {
       this.setCurrentVaultItemUuid({ uuid });
       this.getVaultItem({ uuid });
+    },
+    isItemPage() {
+      return /^\/items\/?/.test(this.$route.path);
+    },
+    isSuggestionPage() {
+      return /^\/suggestions\/?/.test(this.$route.path);
     },
   },
 });

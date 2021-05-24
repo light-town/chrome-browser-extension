@@ -7,7 +7,7 @@ import Vue from "vue";
 import DefaultPageLayout from "~/popup/layouts/default.vue";
 
 export default Vue.extend({
-  name: "ItemsPage",
+  name: "SuggestionPage",
   components: {
     DefaultPageLayout,
   },

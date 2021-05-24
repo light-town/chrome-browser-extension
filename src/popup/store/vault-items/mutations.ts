@@ -11,4 +11,7 @@ export default {
   [mutationTypes.SET_FETCH_STATUS](state, payload) {
     state.fetchStatus = payload.status;
   },
+  [mutationTypes.CLEAR_VAULT_ITEM_LIST](state) {
+    state.all = {};
+  },
 };

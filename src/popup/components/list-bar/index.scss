@@ -12,6 +12,8 @@
   --color-list-bar-list-item-acitve-text: var(--color-green-500);
   --color-list-bar-list-item-acitve-desc: var(--color-green-400);
   --color-list-bar-list-item-acitve-bg: var(--color-green-50);
+
+  --color-list-bar-empty-text: var(--color-gray-650);
 }
 
 .list-bar {
@@ -92,5 +94,11 @@
         }
       }
     }
+  }
+
+  &_empty {
+    font-size: 15px;
+
+    color: var(--color-list-bar-empty-text);
   }
 }

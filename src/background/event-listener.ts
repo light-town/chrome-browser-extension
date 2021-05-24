@@ -262,6 +262,89 @@ export default class EventListener {
 
           break;
         }
+        case MessageTypesEnum.GET_SUGGESTIONS_REQUEST: {
+          const currentTabUrl: string = await new Promise((resolve, reject) => {
+            chrome.tabs.query(
+              { active: true, lastFocusedWindow: true },
+              (tabs) => {
+                resolve(tabs[0]?.url);
+              }
+            );
+          });
+
+          if (!currentTabUrl) {
+            chrome.runtime.sendMessage({
+              type: MessageTypesEnum.GET_SUGGESTIONS_RESPONSE,
+              data: {
+                suggestions: [],
+              },
+            });
+          }
+
+          const muk = await this.protectedMemoryService.getItem(
+            StoredDataTypesEnum.MUK,
+            { parseJson: true }
+          );
+
+          const keySets = await this.keySetsService.getKeySets(muk);
+
+          const encItems = await this.vaultItemsService.getItems();
+
+          const encVaults = await this.vaultsService.getVaultsByIds(
+            _.uniqBy(encItems, "vaultUuid").map((i: any) => i.vaultUuid)
+          );
+
+          const vaults: Vault[] = await Promise.all(
+            encVaults.map(
+              (encVault): Promise<any> => {
+                const keySet: any = keySets.find(
+                  (ks) => ks.uuid === encVault.keySetUuid
+                );
+
+                if (keySet.isPrimary)
+                  return core.helpers.vaults.decryptVaultByPrivateKeyHelper(
+                    encVault,
+                    keySet.privateKey
+                  );
+
+                return core.helpers.vaults.decryptVaultBySecretKeyHelper(
+                  encVault,
+                  keySet.symmetricKey
+                );
+              }
+            )
+          );
+
+          const items = await Promise.all(
+            encItems.map((encItem: any) => {
+              const vault: any = vaults.find(
+                (v) => v.uuid === encItem.vaultUuid
+              );
+              return core.helpers.vaultItems.decryptVaultItemHelper(
+                encItem,
+                vault.key
+              );
+            })
+          );
+
+          chrome.runtime.sendMessage({
+            type: MessageTypesEnum.GET_SUGGESTIONS_RESPONSE,
+            data: {
+              suggestions: items.filter((i: any) => {
+                const urls = i.overview.fields
+                  .filter((f) => f.fieldName === "Website URL")
+                  .map((f) => f.value);
+
+                return urls.some((url) => {
+                  const regex = new RegExp(`^${url}`);
+                  return regex.test(currentTabUrl);
+                });
+              }),
+            },
+          });
+
+          break;
+        }
       }
     });
   }
