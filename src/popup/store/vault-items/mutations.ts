@@ -8,4 +8,7 @@ export default {
   [mutationTypes.SET_CURRENT_VAULT_ITEM_UUID](state, payload) {
     state.currentVaultItemUuid = payload.uuid;
   },
+  [mutationTypes.SET_FETCH_STATUS](state, payload) {
+    state.fetchStatus = payload.status;
+  },
 };

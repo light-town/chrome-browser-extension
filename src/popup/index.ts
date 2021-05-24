@@ -46,8 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return router.push("/sign-in");
         }
 
-        // save session token into local state ???
-
         chrome.runtime.sendMessage({
           type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
         });
@@ -55,8 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       }
       case MessageTypesEnum.CREATE_SESSION_RESPONSE: {
-        // save session token into local state ???
-
         chrome.runtime.sendMessage({
           type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
         });
