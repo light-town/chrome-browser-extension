@@ -24,6 +24,14 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{ from: path.resolve(__dirname, "src", "manifest.json") }],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src/assets/logo"),
+          to: path.resolve(__dirname, "dist", "assets/logo"),
+        },
+      ],
+    }),
     new VueLoaderPlugin(),
   ],
   resolve: {
