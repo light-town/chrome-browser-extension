@@ -56,6 +56,13 @@ async function bootstrap() {
   );
   const authService = container.get<AuthService>(TYPES.AuthService);
   const eventListener = container.get<EventListener>(TYPES.EventListener);
+  const storageService = container.get<StorageService>(TYPES.StorageService);
+  const deviceService = container.get<DeviceService>(TYPES.DeviceService);
+
+  await storageService.clear();
+
+  await authService.loadCsrfToken();
+  await deviceService.registerDevice();
 
   idleService.onStateChanged.addListener((newState) => {
     if (newState === "idle") {
@@ -63,9 +70,8 @@ async function bootstrap() {
       protectedMemoryService.removeItem(StoredDataTypes.SESSION_TOKEN);
     }
   });
-
-  await authService.loadCsrfToken();
   idleService.start();
+
   eventListener.listen();
 }
 

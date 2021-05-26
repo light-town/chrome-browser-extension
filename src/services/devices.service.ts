@@ -13,8 +13,6 @@ export default class DeviceService {
   ) {}
 
   async registerDevice() {
-    await this.storageService.clear();
-
     const device = await this.storageService.getItem(StoredDataTypes.DEVICE);
 
     if (device) return;

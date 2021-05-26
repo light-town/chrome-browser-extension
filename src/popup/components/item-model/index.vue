@@ -1,6 +1,10 @@
 <template>
   <ui-grid direction="column" class="h-full p-5">
-    <ui-grid v-if="!loading" direction="column" class="h-full">
+    <ui-grid
+      v-if="!loading && currentVaultItem"
+      direction="column"
+      class="h-full"
+    >
       <ui-grid
         align-items="center"
         justify="space-between"
@@ -34,7 +38,12 @@
         </template>
       </ui-grid>
     </ui-grid>
-    <ui-grid v-else align-items="center" justify="center" class="mt-5">
+    <ui-grid
+      v-else-if="loading && currentVaultItemUuid"
+      align-items="center"
+      justify="center"
+      class="mt-5"
+    >
       <ui-loading :size="24" />
     </ui-grid>
   </ui-grid>
@@ -48,7 +57,6 @@ import * as vaultItemActionTypes from "~/popup/store/vault-items/types";
 import TextItemField from "~/popup/components/item-fields/text/index.vue";
 import PasswordItemField from "~/popup/components/item-fields/password/index.vue";
 import UrlItemField from "~/popup/components/item-fields/url/index.vue";
-import { FetchStatusEnum } from "~/popup/store/vault-items/actions";
 
 export default Vue.extend({
   name: "ItemModel",
@@ -61,14 +69,17 @@ export default Vue.extend({
     PasswordItemField,
     UrlItemField,
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
   computed: {
     ...mapState({
       currentVaultItem: (state: any) =>
         state.vaultItems.all[state.vaultItems.currentVaultItemUuid],
       currentVaultItemUuid: (state: any) =>
         state.vaultItems.currentVaultItemUuid,
-      loading: (state: any) =>
-        state.vaultItems.fetchStatus === FetchStatusEnum.LOADING,
     }),
     fields() {
       const components = {
@@ -96,16 +107,27 @@ export default Vue.extend({
         });
     },
   },
+  watch: {
+    currentVaultItemUuid() {
+      this.loadVaultItem();
+    },
+  },
   created() {
-    this.setCurrentVaultItemUuid({ uuid: this.$route.params.itemUuid });
-
-    this.getVaultItem({ uuid: this.currentVaultItemUuid });
+    this.loadVaultItem();
   },
   methods: {
     ...mapActions({
-      setCurrentVaultItemUuid: vaultItemActionTypes.SET_CURRENT_VAULT_ITEM_UUID,
       getVaultItem: vaultItemActionTypes.GET_VAULT_ITEM,
     }),
+    loadVaultItem() {
+      if (!this.currentVaultItemUuid) return;
+
+      this.loading = true;
+
+      this.getVaultItem({ uuid: this.currentVaultItemUuid }).then(
+        () => (this.loading = false)
+      );
+    },
   },
 });
 </script>

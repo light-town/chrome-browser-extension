@@ -2,7 +2,9 @@
   <ui-grid direction="column" class="h-full">
     <search-bar />
     <ui-grid align-items="center" class="h-full overflow-auto">
-      <list-bar />
+      <slot name="sidebar">
+        <list-bar />
+      </slot>
       <ui-grid direction="column" class="default-page-layout__body">
         <slot name="body"></slot>
       </ui-grid>

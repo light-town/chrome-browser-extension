@@ -1,33 +1,38 @@
 import "reflect-metadata";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-
-import * as MessageTypesEnum from "../enums/message-types.enum";
-
 import Vue from "vue";
 import ProposalNotification from "./components/proposal-notification/index.vue";
+import sendMessage from "~/tools/sendMessage";
+import * as MessageTypesEnum from "../enums/message-types.enum";
+import LoggerService from "~/services/logger.service";
 
-chrome.runtime.onMessage.addListener(({ type }) => {
-  console.log("[Content Script] Message Type: ", type);
+async function bootstrap() {
+  const logger = new LoggerService();
 
-  switch (type) {
-    case MessageTypesEnum.MAKE_PROPOSAL: {
-      const layoutId = "lt-ext-notifs";
-
-      const layout = document.createElement("div");
-      layout.setAttribute("id", layoutId);
-
-      document.querySelector("#app")?.appendChild(layout);
-
-      new Vue({
-        el: `#${layoutId}`,
-        render: (h) => h(ProposalNotification),
-      });
-      break;
+  const response = await sendMessage(
+    MessageTypesEnum.CHECK_PROPOSAL_NEED,
+    {},
+    {
+      fromTab: true,
     }
-  }
-});
+  );
 
-chrome.runtime.sendMessage(chrome.runtime.id, {
-  type: MessageTypesEnum.CHECK_PROPOSAL_NEED,
-});
+  logger.log("Content Script", "Message Type:", response.type, response.data);
+
+  if (response.type !== MessageTypesEnum.MAKE_PROPOSAL) return;
+
+  const layoutId = "lt-ext-notifs";
+
+  const layout = document.createElement("div");
+  layout.setAttribute("id", layoutId);
+
+  document.querySelector("#app")?.appendChild(layout);
+
+  new Vue({
+    el: `#${layoutId}`,
+    render: (h) => h(ProposalNotification),
+  });
+}
+
+bootstrap();

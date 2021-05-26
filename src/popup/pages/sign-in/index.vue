@@ -39,12 +39,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapActions } from "vuex";
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
 /// @ts-ignore
 import LogoIcon from "~/assets/logo.svg";
 /// @ts-ignore
 import UnlockIcon from "~/assets/unlock.svg";
-import * as MessageTypesEnum from "~/enums/message-types.enum";
+import * as accountActionTypes from "~/popup/store/account/types";
 
 export default Vue.extend({
   name: "SignInPage",
@@ -69,15 +70,17 @@ export default Vue.extend({
     });
   },
   methods: {
-    signIn() {
+    ...mapActions({
+      signInAction: accountActionTypes.SIGN_IN,
+    }),
+    async signIn() {
       this.loading = true;
 
-      chrome.runtime.sendMessage({
-        type: MessageTypesEnum.CREATE_SESSION_REQUEST,
-        data: {
-          password: this.password,
-        },
-      });
+      await this.signInAction({ password: this.password });
+
+      this.$router.push(`/items`);
+
+      this.loading = false;
     },
     setInputFieldFocus() {
       this.focused = true;

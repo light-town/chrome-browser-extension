@@ -1,59 +1,39 @@
 import * as actionTypes from "./action-types";
 import * as mutationTypes from "./mutation-types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
-
-export enum FetchStatusEnum {
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-}
+import sendMessage from "~/tools/sendMessage";
 
 export default {
   [actionTypes.SET_CURRENT_VAULT_ITEM_UUID]({ commit }, payload) {
     commit(mutationTypes.SET_CURRENT_VAULT_ITEM_UUID, { uuid: payload.uuid });
   },
-  [actionTypes.SET_VAULT_ITEMS]({ commit }, payload) {
-    for (const item of payload.items)
-      commit(mutationTypes.SET_VAULT_ITEM, { item });
+  async [actionTypes.GET_VAULT_ITEMS]({ commit }) {
+    const response = await sendMessage(
+      MessageTypesEnum.GET_VAULT_ITEMS_REQUEST
+    );
+    const items = response?.data?.items ?? [];
 
-    commit(mutationTypes.SET_FETCH_STATUS, { status: FetchStatusEnum.SUCCESS });
+    for (const item of items) commit(mutationTypes.SET_VAULT_ITEM, { item });
   },
-  [actionTypes.GET_VAULT_ITEMS]({ commit }) {
-    commit(mutationTypes.CLEAR_VAULT_ITEM_LIST);
+  async [actionTypes.GET_VAULT_ITEM]({ commit }, payload) {
+    const response = await sendMessage(
+      MessageTypesEnum.GET_VAULT_ITEM_REQUEST,
+      { uuid: payload.uuid }
+    );
+    const item = response.data.item;
 
-    chrome.runtime.sendMessage({
-      type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
-    });
+    if (!item) return;
 
-    commit(mutationTypes.SET_FETCH_STATUS, { status: FetchStatusEnum.LOADING });
+    commit(mutationTypes.SET_VAULT_ITEM, { item });
   },
-  [actionTypes.SET_VAULT_ITEM]({ commit }, payload) {
-    commit(mutationTypes.SET_VAULT_ITEM, { item: payload.item });
-    commit(mutationTypes.SET_FETCH_STATUS, {
-      status: FetchStatusEnum.SUCCESS,
-    });
-  },
-  [actionTypes.GET_VAULT_ITEM]({ commit }, payload) {
-    chrome.runtime.sendMessage({
-      type: MessageTypesEnum.GET_VAULT_ITEM_REQUEST,
-      data: { uuid: payload.uuid },
-    });
+  async [actionTypes.GET_SUGGESTIONS]({ commit }) {
+    const response = await sendMessage(
+      MessageTypesEnum.GET_SUGGESTIONS_REQUEST
+    );
 
-    commit(mutationTypes.SET_FETCH_STATUS, { status: FetchStatusEnum.LOADING });
-  },
-  [actionTypes.SET_SUGGESTIONS]({ commit }, payload) {
-    for (const item of payload.suggestions)
-      commit(mutationTypes.SET_VAULT_ITEM, { item });
+    const suggestions = response?.data?.suggestions ?? [];
 
-    commit(mutationTypes.SET_FETCH_STATUS, { status: FetchStatusEnum.SUCCESS });
-  },
-  [actionTypes.GET_SUGGESTIONS]({ commit }) {
-    commit(mutationTypes.CLEAR_VAULT_ITEM_LIST);
-
-    chrome.runtime.sendMessage({
-      type: MessageTypesEnum.GET_SUGGESTIONS_REQUEST,
-    });
-
-    commit(mutationTypes.SET_FETCH_STATUS, { status: FetchStatusEnum.LOADING });
+    for (const suggestion of suggestions)
+      commit(mutationTypes.SET_SUGGESTION, { suggestion });
   },
 };

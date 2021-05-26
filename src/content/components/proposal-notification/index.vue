@@ -22,6 +22,7 @@
           <ui-button
             variant="text"
             class="lt_ext_notification__btn"
+            :disabled="loading"
             @click="close"
           >
             Cancel
@@ -29,6 +30,7 @@
           <ui-button
             variant="contained"
             class="lt_ext_notification__btn"
+            :loading="loading"
             @click="acceptProposal"
           >
             Add
@@ -43,7 +45,7 @@
 import Vue from "vue";
 /// @ts-ignore
 import { UiGrid, UiButton } from "@light-town/ui";
-import * as MessageTypesEnum from "~/enums/message-types.enum";
+import acceptProposalHelper from "~/content/helpers/accept-proposal.helper";
 
 export default Vue.extend({
   name: "ProposalNotification",
@@ -54,15 +56,16 @@ export default Vue.extend({
   data() {
     return {
       show: true,
+      loading: false,
     };
   },
   methods: {
     acceptProposal() {
-      chrome.runtime.sendMessage(chrome.runtime.id, {
-        type: MessageTypesEnum.PROPOSAL_ACCEPTED,
-      });
+      this.loading = true;
 
-      this.close();
+      acceptProposalHelper()
+        .then(() => this.close())
+        .finally(() => (this.loading = false));
     },
     close() {
       this.show = false;

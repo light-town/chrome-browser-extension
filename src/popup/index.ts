@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import "reflect-metadata";
 import Vue from "vue";
 import PortalVue from "portal-vue";
@@ -6,8 +8,8 @@ import store from "./store";
 import router from "./router";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 import * as accountActionTypes from "./store/account/types";
-import * as vaultItemActionTypes from "./store/vault-items/types";
 import LoggerService from "~/services/logger.service";
+import sendMessage from "~/tools/sendMessage";
 
 Vue.use(PortalVue);
 
@@ -19,76 +21,47 @@ document.addEventListener("DOMContentLoaded", () => {
     render: (h) => h(App),
   });
 
-  const loggerService = new LoggerService();
+  async function bootstrap() {
+    const loggerService = new LoggerService();
 
-  chrome.runtime.onMessage.addListener(({ type, data }) => {
-    loggerService.log("Popup Script", "Message Type", type, data);
+    const gettingAccountResponse = await sendMessage(
+      MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST
+    );
 
-    switch (type) {
-      case MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE: {
-        if (!data.account) {
-          // redirect to Light Town Website !!!
-          return window.close();
-        }
+    loggerService.log(
+      "Popup Script",
+      "Message Type",
+      gettingAccountResponse?.type,
+      gettingAccountResponse?.data
+    );
 
-        store.dispatch(accountActionTypes.SET_CURRENT_ACCOUNT, {
-          account: data.account,
-        });
+    const account = gettingAccountResponse?.data?.account;
 
-        chrome.runtime.sendMessage({
-          type: MessageTypesEnum.GET_SESSION_TOKEN_REQUEST,
-        });
+    if (!account) return window.close();
 
-        break;
-      }
-      case MessageTypesEnum.GET_SESSION_TOKEN_RESPONSE: {
-        if (!data.sessionToken) {
-          return router.push("/sign-in");
-        }
+    store.dispatch(accountActionTypes.SET_CURRENT_ACCOUNT, {
+      account,
+    });
 
-        chrome.runtime.sendMessage({
-          type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
-        });
+    const gettingSessionTokenResponse = await sendMessage(
+      MessageTypesEnum.GET_SESSION_TOKEN_REQUEST
+    );
 
-        break;
-      }
-      case MessageTypesEnum.CREATE_SESSION_RESPONSE: {
-        chrome.runtime.sendMessage({
-          type: MessageTypesEnum.GET_VAULT_ITEMS_REQUEST,
-        });
+    loggerService.log(
+      "Popup Script",
+      "Message Type",
+      gettingSessionTokenResponse?.type,
+      gettingSessionTokenResponse?.data
+    );
 
-        break;
-      }
-      case MessageTypesEnum.GET_VAULT_ITEMS_RESPONSE: {
-        store.dispatch(vaultItemActionTypes.SET_VAULT_ITEMS, {
-          items: data.items,
-        });
+    const sessionToken = gettingSessionTokenResponse?.data?.sessionToken;
 
-        if (data.items.length) router.push(`/items/${data.items[0].uuid}`);
-        else router.push(`/items`);
-        break;
-      }
-      case MessageTypesEnum.GET_SUGGESTIONS_RESPONSE: {
-        store.dispatch(vaultItemActionTypes.SET_SUGGESTIONS, {
-          suggestions: data.suggestions,
-        });
-
-        if (data.suggestions.length)
-          router.push(`/suggestions/${data.suggestions[0].uuid}`);
-        else router.push(`/suggestions`);
-
-        break;
-      }
-      case MessageTypesEnum.GET_VAULT_ITEM_RESPONSE: {
-        store.dispatch(vaultItemActionTypes.SET_VAULT_ITEM, {
-          item: data.item,
-        });
-        break;
-      }
+    if (!sessionToken) {
+      return router.push(`/sign-in`);
     }
-  });
 
-  chrome.runtime.sendMessage({
-    type: MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST,
-  });
+    return router.push(`/items`);
+  }
+
+  bootstrap();
 });

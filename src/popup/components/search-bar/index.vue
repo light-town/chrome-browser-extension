@@ -2,7 +2,14 @@
   <ui-grid align-items="center" justify="space-between" class="search-bar">
     <ui-grid align-items="center">
       <loupe-icon class="search-bar__input-icon" />
-      <ui-input placeholder="Search passwords" class="search-bar__input" />
+      <ui-input
+        ref="input"
+        v-model="query"
+        placeholder="Search passwords"
+        class="search-bar__input"
+        :value="query"
+        tabindex="-1"
+      />
     </ui-grid>
     <ui-grid align-items="center" class="search-bar__tools">
       <ui-button variant="text" class="search-bar__settings-btn">
@@ -28,6 +35,36 @@ export default Vue.extend({
     UiButton,
     LoupeIcon,
     SettingsIcon,
+  },
+  data() {
+    return {
+      query: "",
+    };
+  },
+  watch: {
+    query() {
+      if (!this.query.length) {
+        this.$router.push("/items");
+        return;
+      }
+
+      if (this.$route.fullPath === `/search?q=${this.query}`) return;
+
+      this.$router.push(`/search?q=${this.query}`);
+    },
+  },
+  created() {
+    if (this.$route.path !== "/search") return;
+
+    this.query = this.$route.query.q;
+  },
+  mounted() {
+    this.$refs.input.$el.focus();
+  },
+  updated() {
+    if (this.$route.path !== "/search") return;
+
+    this.query = this.$route.query.q;
   },
 });
 </script>
