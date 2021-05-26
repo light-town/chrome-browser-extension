@@ -36,4 +36,7 @@ export default {
     for (const suggestion of suggestions)
       commit(mutationTypes.SET_SUGGESTION, { suggestion });
   },
+  [actionTypes.SET_SEARCH_QUERY]({ commit }, payload) {
+    commit(mutationTypes.SET_SEARCH_QUERY, { query: payload.query });
+  },
 };

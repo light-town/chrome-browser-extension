@@ -21,11 +21,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapActions, mapState } from "vuex";
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
 /// @ts-ignore
 import LoupeIcon from "~/assets/loupe.svg";
 /// @ts-ignore
 import SettingsIcon from "~/assets/settings.svg";
+import * as vaultItemsActionTypes from "~/popup/store/vault-items/types";
+import { Store } from "~/popup/store";
 
 export default Vue.extend({
   name: "SearchBar",
@@ -41,30 +44,36 @@ export default Vue.extend({
       query: "",
     };
   },
+  computed: {
+    ...mapState({
+      searchQuery: (state: Store) => state.vaultItems.searchQuery,
+    }),
+  },
   watch: {
     query() {
-      if (!this.query.length) {
+      if (!this.query.trim().length) {
+        this.setSearchQuery({ query: "" });
         this.$router.push("/items");
         return;
       }
 
-      if (this.$route.fullPath === `/search?q=${this.query}`) return;
+      this.setSearchQuery({ query: this.query });
 
-      this.$router.push(`/search?q=${this.query}`);
+      if (this.$route.fullPath === `/search`) return;
+
+      this.$router.push(`/search`);
     },
   },
   created() {
-    if (this.$route.path !== "/search") return;
-
-    this.query = this.$route.query.q;
+    this.query = this.searchQuery;
   },
   mounted() {
     this.$refs.input.$el.focus();
   },
-  updated() {
-    if (this.$route.path !== "/search") return;
-
-    this.query = this.$route.query.q;
+  methods: {
+    ...mapActions({
+      setSearchQuery: vaultItemsActionTypes.SET_SEARCH_QUERY,
+    }),
   },
 });
 </script>

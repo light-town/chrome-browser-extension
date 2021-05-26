@@ -59,7 +59,7 @@ async function bootstrap() {
   const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
 
-  await storageService.clear();
+  // await storageService.clear();
 
   await authService.loadCsrfToken();
   await deviceService.registerDevice();

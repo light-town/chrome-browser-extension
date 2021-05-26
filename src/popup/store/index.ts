@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import account from "./account";
 import vaultItems from "./vault-items";
+import { State as VaultItemsState } from "./vault-items/state";
 
 Vue.use(Vuex);
 
@@ -12,5 +13,10 @@ const store = new Vuex.Store({
     vaultItems,
   },
 });
+
+export class Store {
+  account: any;
+  vaultItems: VaultItemsState;
+}
 
 export default store;
