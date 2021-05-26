@@ -105,6 +105,10 @@ export class AuthService {
     ] = `Bearer ${token}`;
   }
 
+  get authorized() {
+    return this.axiosService.instance.defaults.headers.common["Authorization"];
+  }
+
   get currentAccount() {
     return this.storageService.getItem(StoredDataTypesEnum.CURRENT_ACCOUNT);
   }

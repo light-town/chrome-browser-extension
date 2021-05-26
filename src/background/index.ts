@@ -24,6 +24,23 @@ import * as StoredDataTypes from "~/enums/stored-data-types.enum";
 
 import EventListener from "./event-listener";
 
+async function setIconHelper(suffix: "" | "locked" = "") {
+  return new Promise<void>((resolve) => {
+    const suff = suffix === "" ? suffix : `-${suffix}`;
+
+    chrome.browserAction.setIcon(
+      {
+        path: {
+          16: "/assets/logo/x16" + suff + ".png",
+          20: "/assets/logo/x20" + suff + ".png",
+          32: "/assets/logo/x32" + suff + ".png",
+        },
+      },
+      () => resolve()
+    );
+  });
+}
+
 async function bootstrap() {
   container.bind<IdleService>(TYPES.IdleService).to(IdleService);
   container.bind<LoggerService>(TYPES.LoggerService).to(LoggerService);
@@ -56,7 +73,7 @@ async function bootstrap() {
   );
   const authService = container.get<AuthService>(TYPES.AuthService);
   const eventListener = container.get<EventListener>(TYPES.EventListener);
-  const storageService = container.get<StorageService>(TYPES.StorageService);
+  // const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
 
   // await storageService.clear();
@@ -64,8 +81,14 @@ async function bootstrap() {
   await authService.loadCsrfToken();
   await deviceService.registerDevice();
 
+  if (!authService.authorized) setIconHelper("locked");
+
   idleService.onStateChanged.addListener((newState) => {
-    if (newState === "idle") {
+    if (newState === "active") {
+      setIconHelper();
+    } else if (newState === "idle") {
+      setIconHelper("locked");
+
       protectedMemoryService.removeItem(StoredDataTypes.SESSION);
       protectedMemoryService.removeItem(StoredDataTypes.SESSION_TOKEN);
     }
