@@ -6,6 +6,7 @@
           <sidebar-menu
             :items="items"
             :loading="loading"
+            :active-item-uuid="currentVaultItemUuid"
             @menu-item-click="setCurrentVaultItem"
           />
         </template>
@@ -26,6 +27,7 @@ import * as vaultItemActionTypes from "~/popup/store/vault-items/types";
 import Sidebar from "~/popup/components/list-bar/index.vue";
 import SidebarMenu from "~/popup/components/list-bar/menu/index.vue";
 import { Store } from "~/popup/store";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 export default Vue.extend({
   name: "SearchPage",
@@ -44,34 +46,26 @@ export default Vue.extend({
     ...mapState({
       currentVaultItemUuid: (state: Store) =>
         state.vaultItems.currentVaultItemUuid,
+      searchQuery: (state: Store) => state.vaultItems.searchQuery,
       items(state: Store) {
         return Object.values(state.vaultItems.all)
+          .filter((i) => {
+            return new RegExp(`^${this.searchQuery.toLowerCase()}`).test(
+              i.overview.name.toLowerCase()
+            );
+          })
           .map((i: any) => ({
             uuid: i.uuid,
             name: i.overview.fields.find((f) => f.fieldName === "Avatar").value,
             desc: i.overview.fields.find((f) => f.fieldName === "Username")
               .value,
-            isActive: this.currentVaultItemUuid === i.uuid,
-          }))
-          .filter((i) => {
-            console.log(state);
-            return new RegExp(
-              `^${state.vaultItems.searchQuery.toLowerCase()}`
-            ).test(i.name.toLowerCase());
-          });
+          }));
       },
     }),
   },
   watch: {
-    items() {
-      if (this.items.length /* && !this.currentVaultItemUuid */) {
-        this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
-      }
-    },
-    loading() {
-      if (this.loading) return;
-
-      if (this.items.length /* && !this.currentVaultItemUuid */) {
+    searchQuery() {
+      if (this.items.length) {
         this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
       }
     },
@@ -81,7 +75,16 @@ export default Vue.extend({
 
     this.setCurrentVaultItemUuid({ uuid: null });
 
-    this.getVaultItems().then(() => (this.loading = false));
+    this.getVaultItems().then((response) => {
+      if (response?.type === MessageTypesEnum.LOCK_UP) {
+        this.$router.push("/sign-in");
+        return;
+      }
+
+      this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
+
+      this.loading = false;
+    });
   },
   methods: {
     ...mapActions({

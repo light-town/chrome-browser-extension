@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "LightTown",
   "description": "LightTown Chrome Extension",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "background": {
     "page": "/background/index.html",
     "persistent": true

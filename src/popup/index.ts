@@ -6,10 +6,8 @@ import PortalVue from "portal-vue";
 import App from "./app.vue";
 import store from "./store";
 import router from "./router";
-import * as MessageTypesEnum from "~/enums/message-types.enum";
 import * as accountActionTypes from "./store/account/types";
-import LoggerService from "~/services/logger.service";
-import sendMessage from "~/tools/sendMessage";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 Vue.use(PortalVue);
 
@@ -22,45 +20,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function bootstrap() {
-    const loggerService = new LoggerService();
+    await store.dispatch(accountActionTypes.GET_CURRENT_ACCOUNT);
 
-    const gettingAccountResponse = await sendMessage(
-      MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST
+    const sessionToken = await store.dispatch(
+      accountActionTypes.GET_SESSION_TOKEN
     );
 
-    loggerService.log(
-      "Popup Script",
-      "Message Type",
-      gettingAccountResponse?.type,
-      gettingAccountResponse?.data
-    );
+    chrome.runtime.onMessage.addListener(async (msg) => {
+      const { type } = msg;
 
-    const account = gettingAccountResponse?.data?.account;
-
-    if (!account) return window.close();
-
-    store.dispatch(accountActionTypes.SET_CURRENT_ACCOUNT, {
-      account,
+      switch (type) {
+        case MessageTypesEnum.LOCK_UP: {
+          router.push(`/sign-in`);
+          break;
+        }
+      }
     });
 
-    const gettingSessionTokenResponse = await sendMessage(
-      MessageTypesEnum.GET_SESSION_TOKEN_REQUEST
-    );
-
-    loggerService.log(
-      "Popup Script",
-      "Message Type",
-      gettingSessionTokenResponse?.type,
-      gettingSessionTokenResponse?.data
-    );
-
-    const sessionToken = gettingSessionTokenResponse?.data?.sessionToken;
-
     if (!sessionToken) {
-      return router.push(`/sign-in`);
+      router.push(`/sign-in`);
+      return;
     }
 
-    return router.push(`/items`);
+    router.push(`/items`);
   }
 
   bootstrap();

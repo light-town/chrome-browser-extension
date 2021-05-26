@@ -7,3 +7,5 @@ export const GET_SUGGESTION = "GET_SUGGESTION";
 export const GET_SUGGESTIONS = "GET_SUGGESTIONS";
 
 export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
+
+export const CLEAR = "CLEAR";

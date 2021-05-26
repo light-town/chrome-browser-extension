@@ -21,4 +21,10 @@ export default {
   [mutationTypes.SET_SEARCH_QUERY](state: State, payload: { query: string }) {
     state.searchQuery = payload.query;
   },
+  [mutationTypes.CLEAR](state: State) {
+    state.all = {};
+    state.suggestions = {};
+    state.searchQuery = "";
+    state.currentVaultItemUuid = null;
+  },
 };

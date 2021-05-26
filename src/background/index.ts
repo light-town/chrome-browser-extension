@@ -20,26 +20,12 @@ import KeySets from "~/services/api/key-sets";
 import VaultItems from "~/services/api/vault-items";
 import Vaults from "~/services/api/vaults";
 
-import * as StoredDataTypes from "~/enums/stored-data-types.enum";
+import * as StoredDataTypesEnum from "~/enums/stored-data-types.enum";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 import EventListener from "./event-listener";
-
-async function setIconHelper(suffix: "" | "locked" = "") {
-  return new Promise<void>((resolve) => {
-    const suff = suffix === "" ? suffix : `-${suffix}`;
-
-    chrome.browserAction.setIcon(
-      {
-        path: {
-          16: "/assets/logo/x16" + suff + ".png",
-          20: "/assets/logo/x20" + suff + ".png",
-          32: "/assets/logo/x32" + suff + ".png",
-        },
-      },
-      () => resolve()
-    );
-  });
-}
+import setIconHelper from "./helpers/set-icon.helper";
+import sendMessage from "~/tools/sendMessage";
 
 async function bootstrap() {
   container.bind<IdleService>(TYPES.IdleService).to(IdleService);
@@ -75,6 +61,7 @@ async function bootstrap() {
   const eventListener = container.get<EventListener>(TYPES.EventListener);
   // const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
+  const loggerService = container.get<LoggerService>(TYPES.LoggerService);
 
   // await storageService.clear();
 
@@ -84,14 +71,16 @@ async function bootstrap() {
   if (!authService.authorized) setIconHelper("locked");
 
   idleService.onStateChanged.addListener((newState) => {
-    if (newState === "active") {
-      setIconHelper();
-    } else if (newState === "idle") {
-      setIconHelper("locked");
+    loggerService.log("Idle Service", "State changed", newState);
 
-      protectedMemoryService.removeItem(StoredDataTypes.SESSION);
-      protectedMemoryService.removeItem(StoredDataTypes.SESSION_TOKEN);
-    }
+    if (newState !== "idle") return;
+
+    setIconHelper("locked");
+
+    protectedMemoryService.removeItem(StoredDataTypesEnum.SESSION);
+    protectedMemoryService.removeItem(StoredDataTypesEnum.SESSION_TOKEN);
+
+    sendMessage(MessageTypesEnum.LOCK_UP);
   });
   idleService.start();
 

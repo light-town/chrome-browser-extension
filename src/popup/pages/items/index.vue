@@ -6,6 +6,7 @@
           <sidebar-menu
             :items="items"
             :loading="loading"
+            :active-item-uuid="currentVaultItemUuid"
             @menu-item-click="setCurrentVaultItem"
           />
         </template>
@@ -25,6 +26,8 @@ import ItemModel from "~/popup/components/item-model/index.vue";
 import * as vaultItemActionTypes from "~/popup/store/vault-items/types";
 import Sidebar from "~/popup/components/list-bar/index.vue";
 import SidebarMenu from "~/popup/components/list-bar/menu/index.vue";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
+import { Store } from "~/popup/store";
 
 export default Vue.extend({
   name: "ItemsPage",
@@ -41,28 +44,20 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
-      currentVaultItemUuid: (state: any) =>
+      currentVaultItemUuid: (state: Store) =>
         state.vaultItems.currentVaultItemUuid,
-      items(state: any) {
+      items(state: Store) {
         return Object.values(state.vaultItems.all).map((i: any) => ({
           uuid: i.uuid,
           name: i.overview.fields.find((f) => f.fieldName === "Avatar").value,
           desc: i.overview.fields.find((f) => f.fieldName === "Username").value,
-          isActive: this.currentVaultItemUuid === i.uuid,
         }));
       },
     }),
   },
   watch: {
-    items() {
-      if (this.items.length && !this.currentVaultItemUuid) {
-        this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
-      }
-    },
-    loading() {
-      if (this.loading) return;
-
-      if (this.items.length && !this.currentVaultItemUuid) {
+    vaultItems() {
+      if (this.items.length) {
         this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
       }
     },
@@ -72,7 +67,16 @@ export default Vue.extend({
 
     this.setCurrentVaultItemUuid({ uuid: null });
 
-    this.getVaultItems().then(() => (this.loading = false));
+    this.getVaultItems().then((response) => {
+      if (response?.type === MessageTypesEnum.LOCK_UP) {
+        this.$router.push("/sign-in");
+        return;
+      }
+
+      this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
+
+      this.loading = false;
+    });
   },
   methods: {
     ...mapActions({

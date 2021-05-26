@@ -46,6 +46,7 @@ import LogoIcon from "~/assets/logo.svg";
 /// @ts-ignore
 import UnlockIcon from "~/assets/unlock.svg";
 import * as accountActionTypes from "~/popup/store/account/types";
+import * as vaultItemsActionTypes from "~/popup/store/vault-items/types";
 
 export default Vue.extend({
   name: "SignInPage",
@@ -63,7 +64,9 @@ export default Vue.extend({
       focused: false,
     };
   },
-
+  created() {
+    this.clearVaultItems();
+  },
   mounted() {
     this.$nextTick(() => {
       this.setInputFieldFocus();
@@ -72,6 +75,7 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       signInAction: accountActionTypes.SIGN_IN,
+      clearVaultItems: vaultItemsActionTypes.CLEAR,
     }),
     async signIn() {
       this.loading = true;

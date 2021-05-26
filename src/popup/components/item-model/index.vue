@@ -57,6 +57,7 @@ import * as vaultItemActionTypes from "~/popup/store/vault-items/types";
 import TextItemField from "~/popup/components/item-fields/text/index.vue";
 import PasswordItemField from "~/popup/components/item-fields/password/index.vue";
 import UrlItemField from "~/popup/components/item-fields/url/index.vue";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 export default Vue.extend({
   name: "ItemModel",
@@ -125,7 +126,14 @@ export default Vue.extend({
       this.loading = true;
 
       this.getVaultItem({ uuid: this.currentVaultItemUuid }).then(
-        () => (this.loading = false)
+        (response) => {
+          if (response?.type === MessageTypesEnum.LOCK_UP) {
+            this.$router.push("/sign-in");
+            return;
+          }
+
+          this.loading = false;
+        }
       );
     },
   },

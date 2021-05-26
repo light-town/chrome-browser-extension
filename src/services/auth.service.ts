@@ -118,6 +118,8 @@ export class AuthService {
   }
 
   async refresh(session) {
+    if (!session) Promise.reject("The session is undefined");
+
     const response = await this.apiService.auth.resfreshToken(session.uuid);
 
     if (response.statusCode !== 201) return null;

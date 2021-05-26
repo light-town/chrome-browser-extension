@@ -6,7 +6,7 @@
         :key="item.uuid"
         :name="item.name"
         :desc="item.desc"
-        :active="item.isActive"
+        :active="item.uuid === activeItemUuid"
         @click.native="(e) => $emit('menu-item-click', e, item)"
       />
     </template>
@@ -43,6 +43,11 @@ export default Vue.extend({
     items: {
       type: Array,
       required: true,
+    },
+    activeItemUuid: {
+      type: String,
+      required: false,
+      default: null,
     },
     loading: {
       type: Boolean,

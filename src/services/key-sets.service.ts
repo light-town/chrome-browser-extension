@@ -58,7 +58,7 @@ export default class KeySetsService {
     return <KeySet[]>[primaryKeySet, ...secondaryKeySets];
   }
 
-  async deriveMasterUnlockKey(currentAccountUuid, currentAccountKey, password) {
+  async deriveMasterUnlockKey(currentAccountKey, password) {
     const response = await this.apiService.keySets.getPrimaryKeySet();
 
     if (response.statusCode !== 200) return;

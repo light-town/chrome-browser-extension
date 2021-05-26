@@ -26,6 +26,8 @@ export class AxiosService {
     });
 
     instance.interceptors.response.use(null, async (error) => {
+      this.logggerService.error('Axios Service', 'Error received', error);
+
       if (error.response.status === 401) {
         if (this.#refreshed) { this.#refreshed = false; return Promise.reject(error); } 
 
@@ -36,12 +38,14 @@ export class AxiosService {
           }
         );
 
-        this.logggerService.log('Axios Service', '401 Error');
+        try { 
+          const newToken = await this.authService.refresh(session);
+          this.authService.authorize(newToken);
 
-        const newToken = await this.authService.refresh(session);
-        this.authService.authorize(newToken);
-
-        error.config.headers.Authorization = `Bearer ${newToken}`;
+          error.config.headers.Authorization = `Bearer ${newToken}`;
+        } catch(e) {
+          return Promise.reject(e); 
+        }
 
         this.#refreshed = true;
 
