@@ -1,11 +1,12 @@
-import sendMessage from "~/tools/sendMessage";
 import * as actionTypes from "./action-types";
 import * as mutationTypes from "./mutation-types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
+import sendMessage from "~/tools/sendMessage";
+import postMessage from "~/tools/postMessage";
 
 export default {
   async [actionTypes.SIGN_IN](_, payload) {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.CREATE_SESSION_REQUEST,
       {
         password: payload.password,
@@ -16,7 +17,7 @@ export default {
       return response;
   },
   async [actionTypes.GET_CURRENT_ACCOUNT]({ commit }) {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST
     );
 
@@ -28,7 +29,7 @@ export default {
     });
   },
   async [actionTypes.GET_SESSION_TOKEN]() {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.GET_SESSION_TOKEN_REQUEST
     );
 

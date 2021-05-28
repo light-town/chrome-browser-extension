@@ -15,6 +15,8 @@ import setIconHelper from "./helpers/set-icon.helper";
 import AutoFillService, { ItemField } from "~/services/autofill.service";
 import sendMessage from "~/tools/sendMessage";
 import getActiveTab from "./helpers/get-active.tab.helper";
+import createTab from "./helpers/create-tab.helper";
+import postMessage from "~/tools/postMessage";
 
 @injectable()
 export default class Runtime {
@@ -37,11 +39,11 @@ export default class Runtime {
   ) {}
 
   listen() {
-    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-      new Promise(async (resolve, reject) => {
+    chrome.runtime.onConnect.addListener((port) => {
+      port.onMessage.addListener(async (msg) => {
         try {
           const { type, data } = msg;
-          const { tab } = sender;
+          const { tab } = port.sender;
 
           this.loggerService.log("Background Script", "Message Type", type);
 
@@ -51,18 +53,18 @@ export default class Runtime {
 
               if (!tab?.id) return;
 
-              await sendMessage(
+              await postMessage(
                 MessageTypesEnum.COLLECT_PAGE_DETAILS_REQUEST,
                 {},
                 { tab }
               );
 
               if (currentAccount?.accountUuid) {
-                resolve({
+                port.postMessage({
                   type: MessageTypesEnum.NOT_NEED_PROPOSAL,
                 });
               } else {
-                resolve({
+                port.postMessage({
                   type: MessageTypesEnum.MAKE_PROPOSAL,
                 });
               }
@@ -87,13 +89,13 @@ export default class Runtime {
                 }
               );
 
-              resolve({});
+              port.postMessage({});
               break;
             }
             case MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST: {
               const currentAccount = await this.authService.currentAccount;
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE,
                 data: {
                   account: currentAccount,
@@ -106,7 +108,7 @@ export default class Runtime {
                 StoredDataTypesEnum.SESSION_TOKEN
               );
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.GET_SESSION_TOKEN_RESPONSE,
                 data: {
                   sessionToken,
@@ -165,7 +167,7 @@ export default class Runtime {
 
               setIconHelper();
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.CREATE_SESSION_RESPONSE,
                 data: {
                   sessionToken,
@@ -220,7 +222,7 @@ export default class Runtime {
                 })
               );
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.GET_VAULT_ITEMS_RESPONSE,
                 data: {
                   items,
@@ -269,7 +271,7 @@ export default class Runtime {
                 vault.key
               );
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.GET_VAULT_ITEM_RESPONSE,
                 data: {
                   item,
@@ -288,7 +290,7 @@ export default class Runtime {
               });
 
               if (!currentTabUrl) {
-                resolve({
+                port.postMessage({
                   type: MessageTypesEnum.GET_SUGGESTIONS_RESPONSE,
                   data: {
                     suggestions: [],
@@ -342,7 +344,7 @@ export default class Runtime {
                 })
               );
 
-              resolve({
+              port.postMessage({
                 type: MessageTypesEnum.GET_SUGGESTIONS_RESPONSE,
                 data: {
                   suggestions: items.filter((i: any) => {
@@ -362,12 +364,25 @@ export default class Runtime {
             case MessageTypesEnum.FILL_FORM:
             case MessageTypesEnum.OPEN_AND_FILL_FORM: {
               const itemFields: ItemField[] = data.itemFields;
-              const curretTab: Record<string, any> = await getActiveTab();
+              let currentTab: Record<string, any> = null;
 
-              const collectPageDetailsResponse = await sendMessage(
+              if (type === MessageTypesEnum.OPEN_AND_FILL_FORM) {
+                const websiteUrlField = itemFields.find(
+                  (f) => f.fieldName === "Website URL"
+                );
+
+                currentTab = await createTab({
+                  url: websiteUrlField?.value,
+                  active: true,
+                });
+              } else {
+                currentTab = await getActiveTab();
+              }
+
+              const collectPageDetailsResponse = await postMessage(
                 MessageTypesEnum.COLLECT_PAGE_DETAILS_REQUEST,
                 {},
-                { tab: curretTab }
+                { tab: currentTab }
               );
 
               const details = collectPageDetailsResponse.data.details;
@@ -377,24 +392,21 @@ export default class Runtime {
                 itemFields
               );
 
-              await sendMessage(
+              const response = await postMessage(
                 MessageTypesEnum.FILL_FORM,
                 {
                   fillScript,
                 },
-                { tab: curretTab }
+                { tab: currentTab }
               );
 
-              resolve({});
+              port.postMessage({});
               break;
             }
           }
         } catch (e) {
-          reject(e);
-        }
-      })
-        .then(sendResponse)
-        .catch((e) => {
+          port.postMessage(e);
+
           this.loggerService.error("Background", "Error received", e);
 
           setIconHelper("locked");
@@ -405,14 +417,13 @@ export default class Runtime {
               StoredDataTypesEnum.SESSION_TOKEN
             );
 
-            sendResponse({ type: MessageTypesEnum.LOCK_UP });
+            port.postMessage({ type: MessageTypesEnum.LOCK_UP });
             return;
           }
 
-          sendResponse({ type: MessageTypesEnum.ERROR });
-        });
-
-      return true;
+          port.postMessage({ type: MessageTypesEnum.ERROR });
+        }
+      });
     });
   }
 }

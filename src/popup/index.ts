@@ -21,15 +21,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function bootstrap() {
-    chrome.runtime.onMessage.addListener(async (msg) => {
-      const { type } = msg;
+    chrome.runtime.onConnect.addListener((port) => {
+      port.onMessage.addListener(async (msg) => {
+        const { type } = msg;
 
-      switch (type) {
-        case MessageTypesEnum.LOCK_UP: {
-          router.push(`/sign-in`);
-          break;
+        switch (type) {
+          case MessageTypesEnum.LOCK_UP: {
+            router.push(`/sign-in`);
+            port.postMessage({});
+            break;
+          }
         }
-      }
+      });
     });
 
     await store.dispatch(accountActionTypes.GET_CURRENT_ACCOUNT);

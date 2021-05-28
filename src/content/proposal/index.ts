@@ -8,19 +8,14 @@ import sendMessage from "~/tools/sendMessage";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 import LoggerService from "~/services/logger.service";
 import container from "~/services/container";
+import postMessage from "~/tools/postMessage";
 
 async function bootstrap() {
   container.bind<LoggerService>(LoggerService).toSelf();
 
   const logger = container.get<LoggerService>(LoggerService);
 
-  const response = await sendMessage(
-    MessageTypesEnum.CHECK_PROPOSAL_NEED,
-    {},
-    {
-      fromTab: true,
-    }
-  );
+  const response = await postMessage(MessageTypesEnum.CHECK_PROPOSAL_NEED);
 
   logger.log("Content Script", "Message Type:", response.type, response.data);
 

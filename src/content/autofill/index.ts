@@ -16,7 +16,7 @@ async function bootstrap() {
   const logger = container.get<LoggerService>(LoggerService);
   const autofiller = container.get<AutoFiller>(AutoFiller);
 
-  chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
+  /* chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
     const { type, data } = msg;
 
     logger.log("Content Script", "Message received:", type, data);
@@ -36,12 +36,40 @@ async function bootstrap() {
       }
       case MessageTypesEnum.FILL_FORM: {
         autofiller.fill(document, data.fillScript);
-        sendResponse();
+        sendResponse({});
         break;
       }
     }
 
     return true;
+  });
+ */
+  chrome.runtime.onConnect.addListener((port) => {
+    port.onMessage.addListener(async (msg) => {
+      const { type, data } = msg;
+
+      logger.log("Content Script", "Message received:", type, data);
+
+      switch (type) {
+        case MessageTypesEnum.COLLECT_PAGE_DETAILS_REQUEST: {
+          const pageDetails = autofiller.collect(document);
+
+          port.postMessage({
+            type: MessageTypesEnum.COLLECT_PAGE_DETAILS_RESPONSE,
+            data: {
+              details: pageDetails,
+            },
+          });
+          break;
+        }
+        case MessageTypesEnum.FILL_FORM: {
+          autofiller.fill(document, data.fillScript);
+
+          port.postMessage({});
+          break;
+        }
+      }
+    });
   });
 }
 

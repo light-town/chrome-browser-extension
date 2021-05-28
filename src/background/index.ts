@@ -28,6 +28,7 @@ import setIconHelper from "./helpers/set-icon.helper";
 import sendMessage from "~/tools/sendMessage";
 import AutoFillService from "~/services/autofill.service";
 import getActiveTab from "./helpers/get-active.tab.helper";
+import postMessage from "~/tools/postMessage";
 
 async function bootstrap() {
   container.bind<IdleService>(TYPES.IdleService).to(IdleService);
@@ -83,7 +84,9 @@ async function bootstrap() {
     protectedMemoryService.removeItem(StoredDataTypesEnum.SESSION);
     protectedMemoryService.removeItem(StoredDataTypesEnum.SESSION_TOKEN);
 
-    sendMessage(MessageTypesEnum.LOCK_UP);
+    postMessage(MessageTypesEnum.LOCK_UP).catch((e) => {
+      loggerService.error("Idle Service", "Error received", e);
+    });
   });
   idleService.start();
 

@@ -1,6 +1,7 @@
 import sendMessage from "~/tools/sendMessage";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
+import postMessage from "~/tools/postMessage";
 
 export default function acceptProposalHelper() {
-  return sendMessage(MessageTypesEnum.PROPOSAL_ACCEPTED, {}, { fromTab: true });
+  return postMessage(MessageTypesEnum.PROPOSAL_ACCEPTED);
 }

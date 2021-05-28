@@ -2,13 +2,14 @@ import * as actionTypes from "./action-types";
 import * as mutationTypes from "./mutation-types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 import sendMessage from "~/tools/sendMessage";
+import postMessage from "~/tools/postMessage";
 
 export default {
   [actionTypes.SET_CURRENT_VAULT_ITEM_UUID]({ commit }, payload) {
     commit(mutationTypes.SET_CURRENT_VAULT_ITEM_UUID, { uuid: payload.uuid });
   },
   async [actionTypes.GET_VAULT_ITEMS]({ commit }) {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.GET_VAULT_ITEMS_REQUEST
     );
 
@@ -20,7 +21,7 @@ export default {
     for (const item of items) commit(mutationTypes.SET_VAULT_ITEM, { item });
   },
   async [actionTypes.GET_VAULT_ITEM]({ commit }, payload) {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.GET_VAULT_ITEM_REQUEST,
       { uuid: payload.uuid }
     );
@@ -35,7 +36,7 @@ export default {
     commit(mutationTypes.SET_VAULT_ITEM, { item });
   },
   async [actionTypes.GET_SUGGESTIONS]({ commit }) {
-    const response = await sendMessage(
+    const response = await postMessage(
       MessageTypesEnum.GET_SUGGESTIONS_REQUEST
     );
 

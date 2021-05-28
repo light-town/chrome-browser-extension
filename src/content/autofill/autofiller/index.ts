@@ -275,16 +275,12 @@ export default class AutoFiller {
         for (const field of fields) {
           if (!field || field.disabled || field.readOnly) return;
 
-          switch (
-            (field.form && !field.form.opfilled,
-            field.type ? field.type.toLowerCase() : null)
-          ) {
-            default:
-              field.value == action.value;
+          if (field?.form && !field.form?.opfilled) {
+            field.value == action.value;
 
-              doAllFillOperations(field, function(f) {
-                f.value = action.value;
-              });
+            doAllFillOperations(field, function(f) {
+              f.value = action.value;
+            });
           }
 
           field.form.opfilled = true;
