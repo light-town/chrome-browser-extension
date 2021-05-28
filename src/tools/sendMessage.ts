@@ -1,5 +1,6 @@
 export class Options {
   fromTab?: boolean;
+  tab?: Record<string, any>;
 }
 
 export default function sendMessage<T = any>(
@@ -8,7 +9,7 @@ export default function sendMessage<T = any>(
   options: Options = {}
 ): Promise<T> {
   return new Promise(function(resolve) {
-    if (options.fromTab)
+    if (options.fromTab) {
       chrome.runtime.sendMessage(
         chrome.runtime.id,
         {
@@ -17,7 +18,16 @@ export default function sendMessage<T = any>(
         },
         (response) => resolve(response)
       );
-    else
+    } else if (options.tab) {
+      chrome.tabs.sendMessage(
+        options.tab?.id,
+        {
+          type,
+          data,
+        },
+        (response) => resolve(response)
+      );
+    } else {
       chrome.runtime.sendMessage(
         {
           type,
@@ -25,5 +35,6 @@ export default function sendMessage<T = any>(
         },
         (response) => resolve(response)
       );
+    }
   });
 }

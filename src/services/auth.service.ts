@@ -7,6 +7,8 @@ import ApiService from "./api.service";
 import * as StoredDataTypesEnum from "../enums/stored-data-types.enum";
 import { TYPES } from "./container";
 
+export const AUTHORIZATION_HEADER_NAME = "Authorization";
+
 @injectable()
 export class AuthService {
   constructor(
@@ -14,8 +16,6 @@ export class AuthService {
     private readonly axiosService: AxiosService,
     @inject(TYPES.StorageService)
     private readonly storageService: StorageService,
-    @inject(TYPES.ProtectedMemoryService)
-    private readonly protectedMemoryService: ProtectedMemoryService,
     @inject(TYPES.ApiService) private readonly apiService: ApiService
   ) {}
 
@@ -101,12 +101,20 @@ export class AuthService {
 
   authorize(token: string) {
     this.axiosService.instance.defaults.headers.common[
-      "Authorization"
+      AUTHORIZATION_HEADER_NAME
     ] = `Bearer ${token}`;
   }
 
+  signOut() {
+    delete this.axiosService.instance.defaults.headers.common[
+      AUTHORIZATION_HEADER_NAME
+    ];
+  }
+
   get authorized() {
-    return this.axiosService.instance.defaults.headers.common["Authorization"];
+    return this.axiosService.instance.defaults.headers.common[
+      AUTHORIZATION_HEADER_NAME
+    ];
   }
 
   get currentAccount() {

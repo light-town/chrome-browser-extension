@@ -1,14 +1,18 @@
 import "reflect-metadata";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+
 import Vue from "vue";
 import ProposalNotification from "./components/proposal-notification/index.vue";
 import sendMessage from "~/tools/sendMessage";
-import * as MessageTypesEnum from "../enums/message-types.enum";
+import * as MessageTypesEnum from "~/enums/message-types.enum";
 import LoggerService from "~/services/logger.service";
+import container from "~/services/container";
 
 async function bootstrap() {
-  const logger = new LoggerService();
+  container.bind<LoggerService>(LoggerService).toSelf();
+
+  const logger = container.get<LoggerService>(LoggerService);
 
   const response = await sendMessage(
     MessageTypesEnum.CHECK_PROPOSAL_NEED,

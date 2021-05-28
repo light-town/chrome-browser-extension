@@ -12,9 +12,12 @@ import VaultsService, { Vault } from "~/services/vaults.service";
 import { TYPES } from "~/services/container";
 import LoggerService from "~/services/logger.service";
 import setIconHelper from "./helpers/set-icon.helper";
+import AutoFillService, { ItemField } from "~/services/autofill.service";
+import sendMessage from "~/tools/sendMessage";
+import getActiveTab from "./helpers/get-active.tab.helper";
 
 @injectable()
-export default class EventListener {
+export default class Runtime {
   constructor(
     @inject(TYPES.ProtectedMemoryService)
     private readonly protectedMemoryService: ProtectedMemoryService,
@@ -28,7 +31,9 @@ export default class EventListener {
     @inject(TYPES.VaultsService)
     private readonly vaultsService: VaultsService,
     @inject(TYPES.LoggerService)
-    private readonly loggerService: LoggerService
+    private readonly loggerService: LoggerService,
+    @inject(TYPES.AutoFillService)
+    private readonly autoFillService: AutoFillService
   ) {}
 
   listen() {
@@ -45,6 +50,12 @@ export default class EventListener {
               const currentAccount = await this.authService.currentAccount;
 
               if (!tab?.id) return;
+
+              await sendMessage(
+                MessageTypesEnum.COLLECT_PAGE_DETAILS_REQUEST,
+                {},
+                { tab }
+              );
 
               if (currentAccount?.accountUuid) {
                 resolve({
@@ -346,6 +357,35 @@ export default class EventListener {
                   }),
                 },
               });
+              break;
+            }
+            case MessageTypesEnum.FILL_FORM:
+            case MessageTypesEnum.OPEN_AND_FILL_FORM: {
+              const itemFields: ItemField[] = data.itemFields;
+              const curretTab: Record<string, any> = await getActiveTab();
+
+              const collectPageDetailsResponse = await sendMessage(
+                MessageTypesEnum.COLLECT_PAGE_DETAILS_REQUEST,
+                {},
+                { tab: curretTab }
+              );
+
+              const details = collectPageDetailsResponse.data.details;
+
+              const fillScript = await this.autoFillService.fill(
+                details,
+                itemFields
+              );
+
+              await sendMessage(
+                MessageTypesEnum.FILL_FORM,
+                {
+                  fillScript,
+                },
+                { tab: curretTab }
+              );
+
+              resolve({});
               break;
             }
           }

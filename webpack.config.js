@@ -7,7 +7,16 @@ module.exports = {
   entry: {
     "popup/index": path.resolve(__dirname, "src", "popup/index.ts"),
     "background/index": path.resolve(__dirname, "src", "background/index.ts"),
-    "content/index": path.resolve(__dirname, "src", "content/index.ts"),
+    "content/proposal/index": path.resolve(
+      __dirname,
+      "src",
+      "content/proposal/index.ts"
+    ),
+    "content/autofill/index": path.resolve(
+      __dirname,
+      "src",
+      "content/autofill/index.ts"
+    ),
   },
   mode: "development",
   plugins: [

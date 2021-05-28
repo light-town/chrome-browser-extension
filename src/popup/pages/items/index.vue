@@ -73,7 +73,9 @@ export default Vue.extend({
         return;
       }
 
-      this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
+      if (this.items.length) {
+        this.setCurrentVaultItemUuid({ uuid: this.items[0].uuid });
+      }
 
       this.loading = false;
     });

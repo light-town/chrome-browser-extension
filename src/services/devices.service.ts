@@ -27,6 +27,14 @@ export default class DeviceService {
   }
 
   get device() {
-    return this.storageService.getItem(StoredDataTypes.DEVICE);
+    return this.storageService
+      .getItem(StoredDataTypes.DEVICE)
+      .then((device) => {
+        if (!device) {
+          return this.registerDevice().then(() => this.device);
+        }
+
+        return device;
+      });
   }
 }

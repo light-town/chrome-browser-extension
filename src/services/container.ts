@@ -14,7 +14,8 @@ export const TYPES = {
   VaultItemsService: Symbol.for("VaultItemsService"),
   VaultsService: Symbol.for("VaultsService"),
   ApiService: Symbol.for("ApiService"),
-  EventListener: Symbol.for("EventListener"),
+  Runtime: Symbol.for("Runtime"),
+  AutoFillService: Symbol.for("AutoFillService"),
 };
 
 export const container = new Container({ defaultScope: "Singleton" });

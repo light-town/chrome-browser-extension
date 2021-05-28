@@ -45,7 +45,7 @@
 import Vue from "vue";
 /// @ts-ignore
 import { UiGrid, UiButton } from "@light-town/ui";
-import acceptProposalHelper from "~/content/helpers/accept-proposal.helper";
+import acceptProposalHelper from "~/content/proposal/helpers/accept-proposal.helper";
 
 export default Vue.extend({
   name: "ProposalNotification",

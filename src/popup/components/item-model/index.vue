@@ -22,7 +22,20 @@
             </p>
           </ui-grid>
         </ui-grid>
-        <ui-button variant="contained" class="item-model__header-btn">
+        <ui-button
+          v-if="isSuggestion"
+          variant="contained"
+          class="item-model__header-btn"
+          @click="fill"
+        >
+          Fill
+        </ui-button>
+        <ui-button
+          v-else
+          variant="contained"
+          class="item-model__header-btn"
+          @click="openAndFill"
+        >
           Open & Fill
         </ui-button>
       </ui-grid>
@@ -58,6 +71,9 @@ import TextItemField from "~/popup/components/item-fields/text/index.vue";
 import PasswordItemField from "~/popup/components/item-fields/password/index.vue";
 import UrlItemField from "~/popup/components/item-fields/url/index.vue";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
+import { Store } from "~/popup/store";
+import fillHelper from "./helpers/fill.helper";
+import openAndFillHelper from "./helpers/open-and-fill.helper";
 
 export default Vue.extend({
   name: "ItemModel",
@@ -77,10 +93,11 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
-      currentVaultItem: (state: any) =>
+      currentVaultItem: (state: Store) =>
         state.vaultItems.all[state.vaultItems.currentVaultItemUuid],
-      currentVaultItemUuid: (state: any) =>
+      currentVaultItemUuid: (state: Store) =>
         state.vaultItems.currentVaultItemUuid,
+      suggestions: (state: Store) => state.vaultItems.suggestions,
     }),
     fields() {
       const components = {
@@ -107,6 +124,13 @@ export default Vue.extend({
           return 0;
         });
     },
+    isSuggestion() {
+      return (
+        Object.values(this.suggestions).find(
+          (s: any) => s.uuid === this.currentVaultItemUuid
+        ) !== undefined
+      );
+    },
   },
   watch: {
     currentVaultItemUuid() {
@@ -119,11 +143,16 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       getVaultItem: vaultItemActionTypes.GET_VAULT_ITEM,
+      getSuggestions: vaultItemActionTypes.GET_SUGGESTIONS,
     }),
     loadVaultItem() {
       if (!this.currentVaultItemUuid) return;
 
       this.loading = true;
+
+      if (!Object.values(this.suggestions).length) {
+        this.getSuggestions();
+      }
 
       this.getVaultItem({ uuid: this.currentVaultItemUuid }).then(
         (response) => {
@@ -135,6 +164,18 @@ export default Vue.extend({
           this.loading = false;
         }
       );
+    },
+    fill() {
+      fillHelper([
+        ...(this.currentVaultItem?.overview?.fields ?? []),
+        ...(this.currentVaultItem?.details?.fields ?? []),
+      ]);
+    },
+    openAndFill() {
+      openAndFillHelper([
+        ...(this.currentVaultItem?.overview?.fields ?? []),
+        ...(this.currentVaultItem?.details?.fields ?? []),
+      ]);
     },
   },
 });

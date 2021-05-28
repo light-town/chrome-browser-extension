@@ -23,9 +23,11 @@ import Vaults from "~/services/api/vaults";
 import * as StoredDataTypesEnum from "~/enums/stored-data-types.enum";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 
-import EventListener from "./event-listener";
+import Runtime from "./runtime";
 import setIconHelper from "./helpers/set-icon.helper";
 import sendMessage from "~/tools/sendMessage";
+import AutoFillService from "~/services/autofill.service";
+import getActiveTab from "./helpers/get-active.tab.helper";
 
 async function bootstrap() {
   container.bind<IdleService>(TYPES.IdleService).to(IdleService);
@@ -43,6 +45,7 @@ async function bootstrap() {
     .bind<VaultItemsService>(TYPES.VaultItemsService)
     .to(VaultItemsService);
   container.bind<VaultsService>(TYPES.VaultsService).to(VaultsService);
+  container.bind<AutoFillService>(TYPES.AutoFillService).to(AutoFillService);
 
   container.bind<ApiService>(TYPES.ApiService).to(ApiService);
   container.bind<Auth>(Auth).toSelf();
@@ -51,14 +54,14 @@ async function bootstrap() {
   container.bind<VaultItems>(VaultItems).toSelf();
   container.bind<Vaults>(Vaults).toSelf();
 
-  container.bind<EventListener>(TYPES.EventListener).to(EventListener);
+  container.bind<Runtime>(TYPES.Runtime).to(Runtime);
 
   const idleService = container.get<IdleService>(TYPES.IdleService);
   const protectedMemoryService = container.get<ProtectedMemoryService>(
     TYPES.ProtectedMemoryService
   );
   const authService = container.get<AuthService>(TYPES.AuthService);
-  const eventListener = container.get<EventListener>(TYPES.EventListener);
+  const runtime = container.get<Runtime>(TYPES.Runtime);
   // const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
   const loggerService = container.get<LoggerService>(TYPES.LoggerService);
@@ -84,7 +87,7 @@ async function bootstrap() {
   });
   idleService.start();
 
-  eventListener.listen();
+  runtime.listen();
 }
 
 bootstrap();

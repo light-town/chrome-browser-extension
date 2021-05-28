@@ -4,9 +4,10 @@ import "reflect-metadata";
 import Vue from "vue";
 import PortalVue from "portal-vue";
 import App from "./app.vue";
-import store from "./store";
+import store, { Store } from "./store";
 import router from "./router";
 import * as accountActionTypes from "./store/account/types";
+import * as vaultItemsActionTypes from "./store/vault-items/types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
 
 Vue.use(PortalVue);
@@ -20,12 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function bootstrap() {
-    await store.dispatch(accountActionTypes.GET_CURRENT_ACCOUNT);
-
-    const sessionToken = await store.dispatch(
-      accountActionTypes.GET_SESSION_TOKEN
-    );
-
     chrome.runtime.onMessage.addListener(async (msg) => {
       const { type } = msg;
 
@@ -37,8 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    await store.dispatch(accountActionTypes.GET_CURRENT_ACCOUNT);
+
+    const sessionToken = await store.dispatch(
+      accountActionTypes.GET_SESSION_TOKEN
+    );
+
     if (!sessionToken) {
       router.push(`/sign-in`);
+      return;
+    }
+
+    await store.dispatch(vaultItemsActionTypes.GET_SUGGESTIONS);
+
+    if (Object.values((store.state as Store).vaultItems.suggestions).length) {
+      router.push("/suggestions");
       return;
     }
 

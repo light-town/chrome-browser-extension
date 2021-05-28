@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { UiGrid, UiInput, UiButton } from "@light-town/ui";
 /// @ts-ignore
 import LogoIcon from "~/assets/logo.svg";
@@ -47,6 +47,7 @@ import LogoIcon from "~/assets/logo.svg";
 import UnlockIcon from "~/assets/unlock.svg";
 import * as accountActionTypes from "~/popup/store/account/types";
 import * as vaultItemsActionTypes from "~/popup/store/vault-items/types";
+import { Store } from "~/popup/store";
 
 export default Vue.extend({
   name: "SignInPage",
@@ -64,6 +65,12 @@ export default Vue.extend({
       focused: false,
     };
   },
+  computed: {
+    ...mapState({
+      suggestions: (state: Store) =>
+        Object.values(state.vaultItems.suggestions),
+    }),
+  },
   created() {
     this.clearVaultItems();
   },
@@ -76,13 +83,20 @@ export default Vue.extend({
     ...mapActions({
       signInAction: accountActionTypes.SIGN_IN,
       clearVaultItems: vaultItemsActionTypes.CLEAR,
+      getSuggestions: vaultItemsActionTypes.GET_SUGGESTIONS,
     }),
     async signIn() {
       this.loading = true;
 
       await this.signInAction({ password: this.password });
 
-      this.$router.push(`/items`);
+      await this.getSuggestions();
+
+      if (this.suggestions.length) {
+        this.$router.push("/suggestions");
+      } else {
+        this.$router.push("/items");
+      }
 
       this.loading = false;
     },
