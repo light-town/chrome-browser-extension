@@ -11,15 +11,24 @@
       flex-shrink: 0;
 
       background-color: var(--color-item-model-body-header-icon-bg);
-
-      margin-right: 1.25rem;
     }
 
     &-title {
       font-size: 1.75em;
       font-weight: 600;
 
+      width: 100%;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
       color: var(--color-item-model-body-header-title);
+    }
+
+    &-icon,
+    &-title {
+      margin-right: 0.75rem;
     }
 
     &-desc {
@@ -29,9 +38,7 @@
     &-btn {
       font-size: 1.25em;
 
-      flex-shrink: 0;
-
-      padding: 0.25em 0.75em;
+      padding: 0.25em 0.5em;
     }
   }
 

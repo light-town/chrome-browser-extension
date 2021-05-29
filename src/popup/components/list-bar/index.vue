@@ -12,7 +12,7 @@
       </template>
     </ui-select>
     <ui-grid v-else align-items="center" class="list-bar__header">
-      <p class="list-bar__header-title">Search Results</p>
+      <p class="list-bar__header-title">{{ $t("Search Results") }}</p>
     </ui-grid>
     <slot name="menu-template"> </slot>
   </ui-grid>
@@ -48,12 +48,12 @@ export default Vue.extend({
       selectedItemCategory: null,
       itemCategories: [
         {
-          uuid: "1",
-          name: "All Items",
+          uuid: "all_items",
+          name: this.$t("All Items"),
         },
         {
-          uuid: "2",
-          name: "Suggestions",
+          uuid: "suggestions",
+          name: this.$t("Suggestions"),
         },
       ],
     };
@@ -66,10 +66,10 @@ export default Vue.extend({
   },
   watch: {
     selectedItemCategory() {
-      if (this.selectedItemCategory?.name === "All Items" && !this.isItemPage) {
+      if (this.selectedItemCategory?.uuid === "all_items" && !this.isItemPage) {
         this.$router.push("/items");
       } else if (
-        this.selectedItemCategory?.name === "Suggestions" &&
+        this.selectedItemCategory?.uuid === "suggestions" &&
         !this.isSuggestionPage
       ) {
         this.$router.push("/suggestions");

@@ -6,6 +6,7 @@ import PortalVue from "portal-vue";
 import App from "./app.vue";
 import store, { Store } from "./store";
 import router from "./router";
+import i18n from "../locales/i18n";
 import * as accountActionTypes from "./store/account/types";
 import * as vaultItemsActionTypes from "./store/vault-items/types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el: "#app",
     router,
     store,
+    i18n,
     render: (h) => h(App),
   });
 

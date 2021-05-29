@@ -16,6 +16,9 @@ export default Vue.extend({
   components: {
     UiGrid,
   },
+  created() {
+    this.$i18n.locale = window.navigator.language;
+  },
 });
 </script>
 

@@ -4,9 +4,11 @@
   --color-item-field-bg: var(--color-white);
   --color-item-field-border: var(--color-gray-150);
 
+  --color-item-field-hover-bg: var(--color-gray-100);
+
   --color-item-field-tool-btns-bg: var(--color-green-50);
 
-  --color-item-field-tool-btn-bg: var(--color-gray-75);
+  --color-item-field-tool-btn-bg: var(--color-gray-100);
   --color-item-field-tool-btn-text: var(--color-green-400);
   --color-item-field-tool-btn-border: var(--color-gray-150);
 
@@ -62,7 +64,12 @@
   }
 
   &:hover {
-    border: 1px solid var(--color-item-field-border);
+    border-color: var(--color-item-field-border);
+    background-color: var(--color-item-field-hover-bg);
+
+    & > .item-field__tool-btns {
+      opacity: 1;
+    }
   }
 
   &__tool-btns {
@@ -76,15 +83,12 @@
 
     border-radius: 0.5rem;
 
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      var(--color-item-field-tool-btn-bg) 80%,
-      var(--color-item-field-tool-btn-bg) 100%
-    );
+    opacity: 0;
   }
 
   &__tool-btn {
+    max-width: 200%;
+
     font-size: 15px;
     font-weight: 700;
 
@@ -99,14 +103,21 @@
 
     padding: 0.5em 0.75em;
 
-    background-color: transparent;
+    background-color: var(--color-item-field-tool-btn-bg);
 
     transition: background 0;
 
+    width: auto;
     height: 100%;
 
+    overflow: hidden;
+
     &:hover {
-      background-color: transparent !important;
+      background-color: var(--color-item-field-tool-btn-bg) !important;
+    }
+
+    &:focus {
+      z-index: 999999;
     }
 
     &:first-child {
@@ -116,6 +127,17 @@
 
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
+
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        var(--color-item-field-tool-btn-bg) 40%,
+        var(--color-item-field-tool-btn-bg) 100%
+      );
+
+      &:hover {
+        background-color: transparent !important;
+      }
     }
 
     &:last-child {

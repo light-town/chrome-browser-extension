@@ -2,12 +2,12 @@
   <portal to="modals-location">
     <popup :is-open="isOpen" @close="close">
       <sidebar-menu>
-        <sidebar-menu-item title="Lock" @click="lockApp">
+        <sidebar-menu-item :title="$t('Lock')" @click="lockApp">
           <template #icon-template>
             <lock-icon />
           </template>
         </sidebar-menu-item>
-        <sidebar-menu-item title="Settings"></sidebar-menu-item>
+        <sidebar-menu-item :title="$t('Settings')"></sidebar-menu-item>
       </sidebar-menu>
     </popup>
   </portal>

@@ -18,7 +18,7 @@
         ref="input"
         v-model="password"
         type="password"
-        placeholder="Enter your Master Password"
+        :placeholder="$t('Enter your Master Password')"
         class="sign-in-page__input"
         :readonly="loading"
         @focus.native="setInputFieldBlur"
@@ -100,15 +100,17 @@ export default Vue.extend({
         switch (response?.error?.type ?? response?.error?.message) {
           case "Unauthorized": {
             this.error = {
-              message: "Incorrect Password",
-              desc: "Please make sure Caps Lock is turned off and try again.",
+              message: this.$t("Incorrect Password"),
+              desc: this.$t(
+                "Please make sure Caps Lock is turned off and try again."
+              ),
             };
             break;
           }
           default: {
             this.error = {
-              message: "Oops, something went wrong",
-              desc: "Please try again later.",
+              message: this.$t("Oops, something went wrong"),
+              desc: this.$t("Please try again later."),
             };
           }
         }

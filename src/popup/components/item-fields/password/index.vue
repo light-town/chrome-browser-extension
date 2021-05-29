@@ -6,7 +6,7 @@
         class="item-field__tool-btn"
         @click.native="copyValue"
       >
-        Copy
+        {{ $t("Copy") }}
       </ui-button>
       <ui-button
         v-if="!showedPassword"
@@ -14,7 +14,7 @@
         class="item-field__tool-btn"
         @click.native="showPassword"
       >
-        Reveal
+        {{ $t("Reveal") }}
       </ui-button>
       <ui-button
         v-else
@@ -22,7 +22,7 @@
         class="item-field__tool-btn"
         @click.native="hidePassword"
       >
-        Conceal
+        {{ $t("Conceal") }}
       </ui-button>
     </template>
   </template-item-field>

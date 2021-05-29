@@ -14,11 +14,7 @@
         </p>
       </slot>
     </ui-grid>
-    <ui-grid
-      v-if="showingToolBtns"
-      align-items="center"
-      class="item-field__tool-btns"
-    >
+    <ui-grid align-items="center" class="item-field__tool-btns">
       <slot name="tools-template"> </slot>
     </ui-grid>
   </ui-grid>

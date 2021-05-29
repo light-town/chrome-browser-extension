@@ -5,13 +5,16 @@
       <ui-grid direction="column" class="lt_ext_notification">
         <ui-grid align-items="center" class="lt_ext_notification__header">
           <p class="lt_ext_notification__title">
-            Add account to Light Town Extension
+            {{ $t("Add account to Light Town Extension") }}
           </p>
         </ui-grid>
         <ui-grid align-items="center" class="lt_ext_notification__body">
           <p class="lt_ext_notification__desc">
-            You can add and remove accounts later from Light Town > Account
-            Settings
+            {{
+              $t(
+                "You can add and remove accounts later from Light Town > Account Settings"
+              )
+            }}
           </p>
         </ui-grid>
         <ui-grid
@@ -25,7 +28,7 @@
             :disabled="loading"
             @click="close"
           >
-            Cancel
+            {{ $t("Cancel") }}
           </ui-button>
           <ui-button
             variant="contained"
@@ -33,7 +36,7 @@
             :loading="loading"
             @click="acceptProposal"
           >
-            Add
+            {{ $t("Add") }}
           </ui-button>
         </ui-grid>
       </ui-grid>
@@ -58,6 +61,9 @@ export default Vue.extend({
       show: true,
       loading: false,
     };
+  },
+  created() {
+    this.$i18n.locale = window.navigator.language;
   },
   methods: {
     acceptProposal() {

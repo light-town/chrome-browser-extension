@@ -20,7 +20,7 @@
     <template v-else>
       <slot name="empty-menu-template">
         <ui-grid align-items="center" justify="center" class="mt-5">
-          <p class="list-bar_empty">No items found</p>
+          <p class="list-bar_empty">{{ $t("No items found") }}</p>
         </ui-grid>
       </slot>
     </template>

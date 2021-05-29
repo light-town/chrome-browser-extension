@@ -6,7 +6,7 @@
         class="item-field__tool-btn"
         @click.native="copyValue"
       >
-        Copy
+        {{ $t("Copy") }}
       </ui-button>
     </template>
   </template-item-field>

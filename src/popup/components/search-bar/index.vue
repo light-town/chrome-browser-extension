@@ -5,7 +5,7 @@
       <ui-input
         ref="input"
         v-model="query"
-        placeholder="Search passwords"
+        :placeholder="$t('Search passwords')"
         class="search-bar__input"
         :value="query"
         tabindex="-1"

@@ -15,9 +15,13 @@
             :name="currentVaultItem.overview.name"
             :size="64"
             class="item-model__header-icon"
+            :title="currentVaultItem.overview.name"
           />
           <ui-grid direction="column" class="w-auto inline-flex">
-            <p class="item-model__header-title">
+            <p
+              class="item-model__header-title"
+              :title="currentVaultItem.overview.name"
+            >
               {{ currentVaultItem.overview.name }}
             </p>
           </ui-grid>
@@ -28,7 +32,7 @@
           class="item-model__header-btn"
           @click="fill"
         >
-          Fill
+          {{ $t("Fill") }}
         </ui-button>
         <ui-button
           v-else
@@ -36,7 +40,7 @@
           class="item-model__header-btn"
           @click="openAndFill"
         >
-          Open & Fill
+          {{ $t("Open & Fill") }}
         </ui-button>
       </ui-grid>
       <ui-grid direction="column" class="item-model__body">
@@ -44,9 +48,10 @@
           <component
             :is="field.component"
             :key="field.id"
-            :title="field.name"
+            :title="$t(field.name)"
             :value="field.value"
             :primary="field.isPrimary"
+            @open-and-fill="openAndFill"
           />
         </template>
       </ui-grid>
