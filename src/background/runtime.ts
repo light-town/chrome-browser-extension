@@ -17,6 +17,7 @@ import sendMessage from "~/tools/sendMessage";
 import getActiveTab from "./helpers/get-active.tab.helper";
 import createTab from "./helpers/create-tab.helper";
 import postMessage from "~/tools/postMessage";
+import lockAppHelper from "./helpers/lock-app.helper";
 
 @injectable()
 export default class Runtime {
@@ -392,7 +393,7 @@ export default class Runtime {
                 itemFields
               );
 
-              const response = await postMessage(
+              await postMessage(
                 MessageTypesEnum.FILL_FORM,
                 {
                   fillScript,
@@ -401,6 +402,10 @@ export default class Runtime {
               );
 
               port.postMessage({});
+              break;
+            }
+            case MessageTypesEnum.LOCK_APP: {
+              lockAppHelper();
               break;
             }
           }

@@ -12,9 +12,14 @@
       />
     </ui-grid>
     <ui-grid align-items="center" class="search-bar__tools">
-      <ui-button variant="text" class="search-bar__settings-btn">
+      <ui-button
+        variant="text"
+        class="search-bar__settings-btn"
+        @click="toggleSidebarShowing"
+      >
         <settings-icon class="search-bar__settings-btn-icon" />
       </ui-button>
+      <sidebar :is-open="isSidebarShow" @close="isSidebarShow = false" />
     </ui-grid>
   </ui-grid>
 </template>
@@ -29,6 +34,7 @@ import LoupeIcon from "~/assets/loupe.svg";
 import SettingsIcon from "~/assets/settings.svg";
 import * as vaultItemsActionTypes from "~/popup/store/vault-items/types";
 import { Store } from "~/popup/store";
+import Sidebar from "~/popup/components/sidebar/index.vue";
 
 export default Vue.extend({
   name: "SearchBar",
@@ -36,12 +42,14 @@ export default Vue.extend({
     UiGrid,
     UiInput,
     UiButton,
+    Sidebar,
     LoupeIcon,
     SettingsIcon,
   },
   data() {
     return {
       query: "",
+      isSidebarShow: false,
     };
   },
   computed: {
@@ -74,6 +82,9 @@ export default Vue.extend({
     ...mapActions({
       setSearchQuery: vaultItemsActionTypes.SET_SEARCH_QUERY,
     }),
+    toggleSidebarShowing() {
+      this.isSidebarShow = !this.isSidebarShow;
+    },
   },
 });
 </script>

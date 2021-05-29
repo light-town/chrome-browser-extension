@@ -1,8 +1,16 @@
 #app[data-theme-mode="light"] {
   --color-sign-in-page-title: var(--color-gray-650);
+
   --color-sign-in-page-input-field-border: var(--color-gray-150);
   --color-sign-in-page-input-field-bs: var(--color-green-100);
   --color-sign-in-page-input-btn-icon-fill: var(--color-white);
+
+  --color-sign-in-page-input-btn-danger-bg: var(--color-red-500);
+  --color-sign-in-page-input-btn-danger-hover-bg: var(--color-red-600);
+  --color-sign-in-page-input-btn-danger-focus-bg: var(--color-red-50);
+
+  --color-sign-in-page-error-title: var(--color-gray-650);
+  --color-sign-in-page-error-desc: var(--color-gray-350);
 }
 
 .sign-in-page {
@@ -53,6 +61,8 @@
     align-items: center;
     justify-content: center;
 
+    border-color: transparent;
+
     &-icon {
       --size: 16px;
 
@@ -64,6 +74,56 @@
 
     & > .ui-btn_loading__icon {
       margin: 0;
+    }
+
+    &_danger {
+      background-color: var(--color-sign-in-page-input-btn-danger-bg);
+
+      &:hover {
+        background-color: var(
+          --color-sign-in-page-input-btn-danger-hover-bg
+        ) !important;
+
+        border-color: transparent !important;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem
+          var(--color-sign-in-page-input-btn-danger-focus-bg);
+      }
+
+      &:active {
+        background-color: var(
+          --color-sign-in-page-input-btn-danger-hover-bg
+        ) !important;
+      }
+    }
+  }
+
+  &__error {
+    &-title,
+    &-desc {
+      width: 100%;
+
+      text-align: center;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &-title {
+      font-size: 15px;
+      font-weight: 600;
+
+      color: var(--color-sign-in-page-error-title);
+    }
+
+    &-desc {
+      font-size: 13px;
+      font-weight: 400;
+
+      color: var(--color-sign-in-page-error-desc);
     }
   }
 }

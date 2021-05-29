@@ -35,4 +35,7 @@ export default {
 
     return response?.data?.sessionToken;
   },
+  async [actionTypes.LOCK_APP]() {
+    await postMessage(MessageTypesEnum.LOCK_APP);
+  },
 };

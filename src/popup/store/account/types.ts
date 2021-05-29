@@ -5,3 +5,4 @@ export const NAMESPACE = "account";
 export const GET_CURRENT_ACCOUNT = `${NAMESPACE}/${actionTypes.GET_CURRENT_ACCOUNT}`;
 export const GET_SESSION_TOKEN = `${NAMESPACE}/${actionTypes.GET_SESSION_TOKEN}`;
 export const SIGN_IN = `${NAMESPACE}/${actionTypes.SIGN_IN}`;
+export const LOCK_APP = `${NAMESPACE}/${actionTypes.LOCK_APP}`;

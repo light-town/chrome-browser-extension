@@ -28,11 +28,16 @@
       <ui-button
         variant="contained"
         class="sign-in-page__btn"
+        :class="{ 'sign-in-page__btn_danger': error }"
         :loading="loading"
         @click="signIn"
       >
         <unlock-icon v-if="!loading" class="sign-in-page__btn-icon" />
       </ui-button>
+    </ui-grid>
+    <ui-grid direction="column" align-items="center" class="mt-4 h-11">
+      <p v-if="error" class="sign-in-page__error-title">{{ error.message }}</p>
+      <p v-if="error" class="sign-in-page__error-desc">{{ error.desc }}</p>
     </ui-grid>
   </ui-grid>
 </template>
@@ -63,6 +68,7 @@ export default Vue.extend({
       password: "",
       loading: false,
       focused: false,
+      error: null,
     };
   },
   computed: {
@@ -88,7 +94,28 @@ export default Vue.extend({
     async signIn() {
       this.loading = true;
 
-      await this.signInAction({ password: this.password });
+      const response = await this.signInAction({ password: this.password });
+
+      if (response?.error) {
+        switch (response?.error?.type ?? response?.error?.message) {
+          case "Unauthorized": {
+            this.error = {
+              message: "Incorrect Password",
+              desc: "Please make sure Caps Lock is turned off and try again.",
+            };
+            break;
+          }
+          default: {
+            this.error = {
+              message: "Oops, something went wrong",
+              desc: "Please try again later.",
+            };
+          }
+        }
+
+        this.loading = false;
+        return;
+      }
 
       await this.getSuggestions();
 

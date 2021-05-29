@@ -86,6 +86,7 @@ module.exports = {
             sass: [
               "vue-style-loader",
               "css-loader",
+              "postcss-loader",
               "sass-loader?indentedSyntax",
             ],
             ts: "babel-loader!ts-loader",
@@ -94,7 +95,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["vue-style-loader", "css-loader"],
+        use: ["vue-style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.scss$/,
