@@ -37,7 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    await store.dispatch(accountActionTypes.GET_CURRENT_ACCOUNT);
+    const currentAccount = await store.dispatch(
+      accountActionTypes.GET_CURRENT_ACCOUNT
+    );
+
+    if (currentAccount?.error) {
+      window.close();
+      return;
+    }
 
     const sessionToken = await store.dispatch(
       accountActionTypes.GET_SESSION_TOKEN

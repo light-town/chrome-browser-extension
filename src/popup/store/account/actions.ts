@@ -21,8 +21,7 @@ export default {
       MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST
     );
 
-    if (response?.type !== MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE)
-      return response;
+    if (response?.type === MessageTypesEnum.ERROR) return response.data;
 
     commit(mutationTypes.SET_CURRENT_ACCOUNT, {
       account: response?.data?.account,

@@ -96,6 +96,18 @@ export default class Runtime {
             case MessageTypesEnum.GET_CURRENT_ACCOUNT_REQUEST: {
               const currentAccount = await this.authService.currentAccount;
 
+              if (!currentAccount) {
+                port.postMessage({
+                  type: MessageTypesEnum.ERROR,
+                  data: {
+                    error: {
+                      type: "Unauthorized",
+                    },
+                  },
+                });
+                return;
+              }
+
               port.postMessage({
                 type: MessageTypesEnum.GET_CURRENT_ACCOUNT_RESPONSE,
                 data: {
@@ -126,6 +138,18 @@ export default class Runtime {
                 this.deviceSerivce.device,
                 this.authService.currentAccount,
               ]);
+
+              if (!currentAccount) {
+                port.postMessage({
+                  type: MessageTypesEnum.ERROR,
+                  data: {
+                    error: {
+                      type: "Unauthorized",
+                    },
+                  },
+                });
+                return;
+              }
 
               const session = await this.authService.createSession(
                 device.uuid,
