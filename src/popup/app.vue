@@ -1,20 +1,17 @@
 <template>
-  <ui-grid id="app" data-theme-mode="light" class="app-page">
-    <ui-grid id="app-page-layout" class="w-full h-full">
-      <router-view></router-view>
-    </ui-grid>
-    <portal-target name="modals-location" multiple> </portal-target>
-  </ui-grid>
+  <ui-theme-provider class="app-page">
+    <router-view></router-view>
+  </ui-theme-provider>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { UiGrid } from "@light-town/ui";
+import { UiThemeProvider } from "@light-town/ui";
 
 export default Vue.extend({
   name: "App",
   components: {
-    UiGrid,
+    UiThemeProvider,
   },
   created() {
     this.$i18n.locale = window.navigator.language;
@@ -23,9 +20,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-@import url("@light-town/ui/assets/css/main.scss");
-@import url("@light-town/ui/dist/lib.css");
-
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -42,9 +36,7 @@ export default Vue.extend({
   width: 600px;
   height: 450px;
 
-  flex-shrink: 0;
-  flex-grow: 0;
-
-  overflow: hidden;
+  @include ui-flex-fixed;
+  @include ui-overflow-hidden;
 }
 </style>

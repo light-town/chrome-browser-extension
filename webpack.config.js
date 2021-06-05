@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: {
@@ -17,6 +18,7 @@ module.exports = {
       "src",
       "content/autofill/index.ts"
     ),
+    "options/index": path.resolve(__dirname, "src", "options/index.ts"),
   },
   mode: "development",
   plugins: [
@@ -30,6 +32,11 @@ module.exports = {
       filename: "background/index.html",
       chunks: ["background/index"],
     }),
+    new HtmlWebpackPlugin({
+      template: "./src/options/index.html",
+      filename: "options/index.html",
+      chunks: ["options/index"],
+    }),
     new CopyWebpackPlugin({
       patterns: [{ from: path.resolve(__dirname, "src", "manifest.json") }],
     }),
@@ -42,6 +49,7 @@ module.exports = {
       ],
     }),
     new VueLoaderPlugin(),
+    new MiniCssExtractPlugin(),
   ],
   resolve: {
     alias: {
@@ -78,13 +86,13 @@ module.exports = {
         options: {
           loaders: {
             scss: [
-              "vue-style-loader",
+              MiniCssExtractPlugin.loader,
               "css-loader",
               "postcss-loader",
               "sass-loader",
             ],
             sass: [
-              "vue-style-loader",
+              MiniCssExtractPlugin.loader,
               "css-loader",
               "postcss-loader",
               "sass-loader?indentedSyntax",
@@ -95,21 +103,31 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["vue-style-loader", "css-loader", "postcss-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
       {
         test: /\.scss$/,
         use: [
-          "vue-style-loader",
+          MiniCssExtractPlugin.loader,
           "css-loader",
           "postcss-loader",
-          "sass-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              additionalData: `
+                @import "@light-town/ui/src/scss/variables.scss";
+                @import "@light-town/ui/src/scss/functions.scss";
+                @import "@light-town/ui/src/scss/mixins.scss";
+                @import "@light-town/ui/src/scss/utilities.scss";
+              `,
+            },
+          },
         ],
       },
       {
         test: /\.sass$/,
         use: [
-          "vue-style-loader",
+          MiniCssExtractPlugin.loader,
           "css-loader",
           "postcss-loader",
           "sass-loader?indentedSyntax",

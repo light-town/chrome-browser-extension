@@ -1,19 +1,17 @@
-#app[data-theme-mode="light"] {
-  --color-item-field-title: var(--color-green-400);
-  --color-item-field-value: var(--color-gray-450);
-  --color-item-field-bg: var(--color-white);
-  --color-item-field-border: var(--color-gray-150);
+$item-field-title: $green-400;
+$item-field-value: $gray-450;
+$item-field-bg: $white;
+$item-field-border: $gray-150;
 
-  --color-item-field-hover-bg: var(--color-gray-100);
+$item-field-hover-bg: $gray-100;
 
-  --color-item-field-tool-btns-bg: var(--color-green-50);
+$item-field-tool-btns-bg: $green-50;
 
-  --color-item-field-tool-btn-bg: var(--color-gray-100);
-  --color-item-field-tool-btn-text: var(--color-green-400);
-  --color-item-field-tool-btn-border: var(--color-gray-150);
+$item-field-tool-btn-bg: $gray-100;
+$item-field-tool-btn-text: $green-400;
+$item-field-tool-btn-border: $gray-150;
 
-  --color-item-field-primary-tool-btn-bg: var(--color-white);
-}
+$item-field-primary-tool-btn-bg: $white;
 
 .item-field {
   position: relative;
@@ -29,7 +27,7 @@
     font-size: 13px;
     font-weight: 500;
 
-    color: var(--color-item-field-title);
+    color: $item-field-title;
 
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -42,7 +40,7 @@
     font-size: 15px;
     font-weight: 500;
 
-    color: var(--color-item-field-value);
+    color: $item-field-value;
 
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -50,22 +48,22 @@
   }
 
   &_primary {
-    background-color: var(--color-item-field-bg);
-    border: 1px solid var(--color-item-field-border);
+    background-color: $item-field-bg;
+    border: 1px solid $item-field-border;
 
     & .item-field__tool-btns {
       background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0%,
-        var(--color-item-field-primary-tool-btn-bg) 80%,
-        var(--color-item-field-primary-tool-btn-bg) 100%
+        $item-field-primary-tool-btn-bg 80%,
+        $item-field-primary-tool-btn-bg 100%
       );
     }
   }
 
   &:hover {
-    border-color: var(--color-item-field-border);
-    background-color: var(--color-item-field-hover-bg);
+    border-color: $item-field-border;
+    background-color: $item-field-hover-bg;
 
     & > .item-field__tool-btns {
       opacity: 1;
@@ -95,15 +93,15 @@
     flex-shrink: 0;
     flex-grow: 0;
 
-    color: var(--color-item-field-tool-btn-text);
+    color: $item-field-tool-btn-text;
 
     border: 0;
-    border-right: 1px solid var(--color-item-field-tool-btn-border);
+    border-right: 1px solid $item-field-tool-btn-border;
     border-radius: 0;
 
     padding: 0.5em 0.75em;
 
-    background-color: var(--color-item-field-tool-btn-bg);
+    background-color: $item-field-tool-btn-bg;
 
     transition: background 0;
 
@@ -113,7 +111,7 @@
     overflow: hidden;
 
     &:hover {
-      background-color: var(--color-item-field-tool-btn-bg) !important;
+      background-color: $item-field-tool-btn-bg !important;
     }
 
     &:focus {
@@ -131,8 +129,8 @@
       background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0%,
-        var(--color-item-field-tool-btn-bg) 40%,
-        var(--color-item-field-tool-btn-bg) 100%
+        $item-field-tool-btn-bg 40%,
+        $item-field-tool-btn-bg 100%
       );
 
       &:hover {

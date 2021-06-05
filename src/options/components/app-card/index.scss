@@ -1,0 +1,50 @@
+.ui-theme_light {
+  --color-app-card-bg: #{$gray-50};
+  --color-app-card-border: #{$gray-150};
+  --color-app-card-icon-title: #{$gray-650};
+  --color-app-card-icon-version: #{$gray-450};
+}
+
+.ui-theme_dark {
+  --color-app-card-bg: #{$gray-600};
+  --color-app-card-border: #{$gray-500};
+  --color-app-card-icon-title: #{$white};
+  --color-app-card-icon-version: #{$gray-150};
+}
+
+.app-card {
+  width: 17rem;
+  height: 14.5rem;
+
+  @include ui-flex-fixed;
+
+  border: 1px solid;
+  border-radius: 0.25rem;
+
+  border-color: var(--color-app-card-border);
+
+  background-color: var(--color-app-card-bg);
+
+  &__logo {
+    margin-bottom: 0.5rem;
+
+    &-title {
+      font-size: 26px;
+      font-weight: 600;
+
+      color: var(--color-app-card-icon-title);
+    }
+
+    &-icon {
+      width: 5rem;
+      height: 5rem;
+      margin: 0.5rem;
+    }
+  }
+
+  &__version {
+    font-size: 12px;
+
+    color: var(--color-app-card-icon-version);
+  }
+}

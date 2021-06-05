@@ -1,0 +1,33 @@
+.ui-theme_light {
+  --color-select-item-btn-text: #{$gray-450};
+  --color-select-item-btn-bg: #{$gray-50};
+  --color-select-item-btn-border: #{$gray-150};
+}
+
+.ui-theme_dark {
+  --color-select-item-btn-text: #{$gray-250};
+  --color-select-item-btn-bg: #{$gray-650};
+  --color-select-item-btn-border: #{$gray-350};
+}
+
+.select-item {
+  &__select {
+    display: inline-flex;
+
+    width: auto;
+  }
+
+  &__btn {
+    font-size: 14px;
+    font-weight: 500;
+
+    color: var(--color-select-item-btn-text);
+
+    border-color: var(--color-select-item-btn-border);
+    border-radius: 0.5rem;
+
+    background-color: var(--color-select-item-btn-bg);
+
+    padding: 0.25rem 1.5rem;
+  }
+}

@@ -16,6 +16,7 @@ export const TYPES = {
   ApiService: Symbol.for("ApiService"),
   Runtime: Symbol.for("Runtime"),
   AutoFillService: Symbol.for("AutoFillService"),
+  SettingsService: Symbol.for("SettingsService"),
 };
 
 export const container = new Container({ defaultScope: "Singleton" });

@@ -22,5 +22,15 @@
   "You can add and remove accounts later from Light Town > Account Settings": "Вы можете добавлять и удалять учетные записи позже в Light Town > Настройки учетной записи",
   "Cancel": "Отмена",
   "Add": "Добавить",
-  "Search Results": "Результаты поиска"
+  "Search Results": "Результаты поиска",
+  "Automatically lock LightTown": "Автоматическая блокировка LightTown",
+  "LightTown will always lock when you quit your browser. Locking your device will not immediately lock LightTown.": "Light Town всегда будет заблокирован, когда вы выйдете из браузера. Блокировка вашего устройства не приведет к немедленной блокировке Light Town.",
+  "Language": "Язык",
+  "Security": "Безопасность",
+  "General": "Общие",
+  "version": "версия",
+  "Appearance": "Внешний вид",
+  "Match System": "Соответсвие системы",
+  "Light": "Светлая",
+  "Dark": "Темная"
 }

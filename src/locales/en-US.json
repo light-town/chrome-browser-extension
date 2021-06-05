@@ -22,5 +22,15 @@
   "You can add and remove accounts later from Light Town > Account Settings": "You can add and remove accounts later from Light Town > Account Settings",
   "Cancel": "Cancel",
   "Add": "Add",
-  "Search Results": "Search Results"
+  "Search Results": "Search Results",
+  "Automatically lock LightTown": "Automatically lock LightTown",
+  "LightTown will always lock when you quit your browser. Locking your device will not immediately lock LightTown.": "LightTown will always lock when you quit your browser. Locking your device will not immediately lock LightTown.",
+  "Language": "Language",
+  "Security": "Security",
+  "General": "General",
+  "version": "version",
+  "Appearance": "Appearance",
+  "Match System": "Match System",
+  "Light": "Light",
+  "Dark": "Dark"
 }

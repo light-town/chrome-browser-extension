@@ -1,0 +1,39 @@
+.ui-theme_light {
+  --color-item-text: #{$gray-450};
+
+  --color-item-odd-bg: #{$gray-50};
+  --color-item-odd-border: #{$gray-100};
+  --color-item-odd-text: #{$gray-650};
+}
+
+.ui-theme_dark {
+  --color-item-text: #{$gray-250};
+
+  --color-item-odd-bg: #{$gray-600};
+  --color-item-odd-border: #{$gray-500};
+  --color-item-odd-text: #{$gray-50};
+}
+
+.item {
+  padding: 0.5rem 1rem;
+
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+
+  &__title {
+    font-size: 15px;
+    width: 500;
+
+    color: var(--color-item-text);
+  }
+
+  &:nth-child(odd) {
+    background-color: var(--color-item-odd-bg);
+    border-top-color: var(--color-item-odd-border);
+    border-bottom-color: var(--color-item-odd-border);
+
+    .item__title {
+      color: var(--color-item-odd-text);
+    }
+  }
+}

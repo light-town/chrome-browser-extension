@@ -18,6 +18,7 @@ import getActiveTab from "./helpers/get-active.tab.helper";
 import createTab from "./helpers/create-tab.helper";
 import postMessage from "~/tools/postMessage";
 import lockAppHelper from "./helpers/lock-app.helper";
+import SettingsService from "~/services/settings.service";
 
 @injectable()
 export default class Runtime {
@@ -36,7 +37,9 @@ export default class Runtime {
     @inject(TYPES.LoggerService)
     private readonly loggerService: LoggerService,
     @inject(TYPES.AutoFillService)
-    private readonly autoFillService: AutoFillService
+    private readonly autoFillService: AutoFillService,
+    @inject(TYPES.SettingsService)
+    private readonly settingsService: SettingsService
   ) {}
 
   listen() {
@@ -430,6 +433,24 @@ export default class Runtime {
             }
             case MessageTypesEnum.LOCK_APP: {
               lockAppHelper();
+              break;
+            }
+            case MessageTypesEnum.GET_SETTINGS_REQUEST: {
+              const settings = await this.settingsService.getAll();
+
+              port.postMessage({
+                settings,
+              });
+              break;
+            }
+            case MessageTypesEnum.UPDATE_SETTINGS_REQUEST: {
+              const { settings } = data;
+
+              const newSettings = await this.settingsService.save(settings);
+
+              port.postMessage({
+                settings: newSettings,
+              });
               break;
             }
           }

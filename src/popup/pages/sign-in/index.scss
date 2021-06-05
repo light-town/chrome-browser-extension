@@ -1,42 +1,40 @@
-#app[data-theme-mode="light"] {
-  --color-sign-in-page-title: var(--color-gray-650);
+$sign-in-page-title: $gray-650;
 
-  --color-sign-in-page-input-field-border: var(--color-gray-150);
-  --color-sign-in-page-input-field-bs: var(--color-green-100);
-  --color-sign-in-page-input-btn-icon-fill: var(--color-white);
+$sign-in-page-input-field-border: $gray-150;
+$sign-in-page-input-field-bs: $green-100;
+$sign-in-page-input-btn-icon-fill: $white;
 
-  --color-sign-in-page-input-btn-danger-bg: var(--color-red-500);
-  --color-sign-in-page-input-btn-danger-hover-bg: var(--color-red-600);
-  --color-sign-in-page-input-btn-danger-focus-bg: var(--color-red-50);
+$sign-in-page-input-btn-danger-bg: $red-500;
+$sign-in-page-input-btn-danger-hover-bg: $red-600;
+$sign-in-page-input-btn-danger-focus-bg: $red-50;
 
-  --color-sign-in-page-error-title: var(--color-gray-650);
-  --color-sign-in-page-error-desc: var(--color-gray-350);
-}
+$sign-in-page-error-title: $gray-650;
+$sign-in-page-error-desc: $gray-350;
 
 .sign-in-page {
   &__logo {
-    --size: 100px;
-
-    width: var(--size);
-    height: var(--size);
+    @include ui-size(100px);
   }
 
   &__title {
     font-size: 40px;
     font-weight: 700;
 
-    color: var(--color-sign-in-page-title);
+    color: $sign-in-page-title;
   }
 
   &__input-field {
+    @include ui-w-full;
+
     padding: 0.375rem;
 
-    border: 1px solid var(--color-sign-in-page-input-field-border);
+    border: 1px solid $sign-in-page-input-field-border;
     border-radius: 4px;
 
     &_focused {
+      @include ui-box-shadow;
+
       border-color: transparent;
-      box-shadow: 0 0 0 0.25rem var(--color-sign-in-page-input-field-bs);
     }
   }
 
@@ -66,10 +64,10 @@
     &-icon {
       --size: 16px;
 
-      width: var(--size);
-      height: var(--size);
+      width: --size;
+      height: --size;
 
-      fill: var(--color-sign-in-page-input-btn-icon-fill);
+      fill: $sign-in-page-input-btn-icon-fill;
     }
 
     & > .ui-btn_loading__icon {
@@ -77,25 +75,20 @@
     }
 
     &_danger {
-      background-color: var(--color-sign-in-page-input-btn-danger-bg);
+      background-color: $sign-in-page-input-btn-danger-bg;
 
       &:hover {
-        background-color: var(
-          --color-sign-in-page-input-btn-danger-hover-bg
-        ) !important;
+        background-color: $sign-in-page-input-btn-danger-hover-bg !important;
 
         border-color: transparent !important;
       }
 
       &:focus {
-        box-shadow: 0 0 0 0.25rem
-          var(--color-sign-in-page-input-btn-danger-focus-bg);
+        box-shadow: 0 0 0 0.25rem $sign-in-page-input-btn-danger-focus-bg;
       }
 
       &:active {
-        background-color: var(
-          --color-sign-in-page-input-btn-danger-hover-bg
-        ) !important;
+        background-color: $sign-in-page-input-btn-danger-hover-bg !important;
       }
     }
   }
@@ -116,14 +109,14 @@
       font-size: 15px;
       font-weight: 600;
 
-      color: var(--color-sign-in-page-error-title);
+      color: $sign-in-page-error-title;
     }
 
     &-desc {
       font-size: 13px;
       font-weight: 400;
 
-      color: var(--color-sign-in-page-error-desc);
+      color: $sign-in-page-error-desc;
     }
   }
 }

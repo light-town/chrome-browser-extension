@@ -26,6 +26,8 @@ import AutoFillService from "~/services/autofill.service";
 import getActiveTab from "./helpers/get-active.tab.helper";
 import postMessage from "~/tools/postMessage";
 import lockAppHelper from "./helpers/lock-app.helper";
+import SettingsService from "~/services/settings.service";
+import createDefaultSettingsHelper from "./helpers/create-default-settings.helper";
 
 async function bootstrap() {
   container.bind<IdleService>(TYPES.IdleService).to(IdleService);
@@ -44,6 +46,7 @@ async function bootstrap() {
     .to(VaultItemsService);
   container.bind<VaultsService>(TYPES.VaultsService).to(VaultsService);
   container.bind<AutoFillService>(TYPES.AutoFillService).to(AutoFillService);
+  container.bind<SettingsService>(TYPES.SettingsService).to(SettingsService);
 
   container.bind<ApiService>(TYPES.ApiService).to(ApiService);
   container.bind<Auth>(Auth).toSelf();
@@ -61,8 +64,15 @@ async function bootstrap() {
   // const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
   const loggerService = container.get<LoggerService>(TYPES.LoggerService);
+  const settingsService = container.get<SettingsService>(TYPES.SettingsService);
 
   // await storageService.clear();
+
+  const existedSettings = await settingsService.getAll();
+
+  if (!existedSettings) {
+    await createDefaultSettingsHelper();
+  }
 
   await authService.loadCsrfToken();
   await deviceService.registerDevice();

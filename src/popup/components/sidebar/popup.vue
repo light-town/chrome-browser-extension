@@ -6,8 +6,7 @@
         direction="column"
         class="sidebar__background"
         @click.native="$emit('close')"
-      >
-      </ui-grid>
+      />
     </transition>
     <transition name="slide">
       <ui-grid v-if="isOpen" direction="column" class="sidebar__popup">

@@ -1,6 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import "reflect-metadata";
+import "../assets/scss/global.scss";
 import Vue from "vue";
 import PortalVue from "portal-vue";
 import App from "./app.vue";

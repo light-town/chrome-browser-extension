@@ -13,6 +13,7 @@
         <ui-grid align-items="center">
           <ui-avatar
             :name="currentVaultItem.overview.name"
+            :alt="currentVaultItem.overview.name"
             :size="64"
             class="item-model__header-icon"
             :title="currentVaultItem.overview.name"

@@ -1,0 +1,39 @@
+* {
+  user-select: none !important;
+
+  &:focus {
+    outline-style: none !important;
+  }
+}
+
+.ui-theme_light {
+  --color-settings-page-bg: #{$white};
+}
+
+.ui-theme_dark {
+  --color-settings-page-bg: #{$gray-700};
+}
+
+.settings-page {
+  flex: 0 0 100%;
+
+  padding: 3.25rem 0;
+
+  height: 100vh;
+
+  overflow: auto;
+
+  background-color: var(--color-settings-page-bg);
+
+  &__app-card {
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    margin-right: 3.25rem;
+  }
+
+  &__settings {
+    flex: 0 0 30rem;
+  }
+}

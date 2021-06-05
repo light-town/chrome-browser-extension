@@ -1,16 +1,14 @@
-#app[data-theme-mode="light"] {
-  --color-item-model-body-header-icon-bg: var(--color-white);
+$item-model-body-header-icon-bg: $white;
 
-  --color-item-model-body-header-title: var(--color-gray-650);
-  --color-item-model-body-header-desc: var(--color-gray-450);
-}
+$item-model-body-header-title: $gray-650;
+$item-model-body-header-desc: $gray-450;
 
 .item-model {
   &__header {
     &-icon {
       flex-shrink: 0;
 
-      background-color: var(--color-item-model-body-header-icon-bg);
+      background-color: $item-model-body-header-icon-bg;
     }
 
     &-title {
@@ -23,7 +21,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
 
-      color: var(--color-item-model-body-header-title);
+      color: $item-model-body-header-title;
     }
 
     &-icon,

@@ -4,7 +4,12 @@
     class="list-bar__list-item"
     :class="{ 'list-bar__list-item_active': active }"
   >
-    <ui-avatar :name="name" :size="32" class="list-bar__list-item-icon" />
+    <ui-avatar
+      :name="name"
+      :alt="name"
+      :size="32"
+      class="list-bar__list-item-icon"
+    />
     <ui-grid direction="column" class="overflow-hidden">
       <p class="list-bar__list-item-text" :title="name">{{ name }}</p>
       <p class="list-bar__list-item-desc" :title="desc">{{ desc }}</p>

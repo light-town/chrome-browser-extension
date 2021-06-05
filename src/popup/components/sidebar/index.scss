@@ -1,8 +1,6 @@
-#app[data-theme-mode="light"] {
-  --color-sidebar-bg: var(--color-gray-50);
-  --color-sidebar-background-bg: var(--color-white);
-  --color-sidebar-border: var(--color-gray-150);
-}
+$sidebar-bg: $gray-50;
+$sidebar-background-bg: $white;
+$sidebar-border: $gray-150;
 
 .sidebar {
   &__popup {
@@ -18,9 +16,9 @@
 
     padding: 1rem;
 
-    background-color: var(--color-sidebar-bg);
+    background-color: $sidebar-bg;
 
-    border-left: 1px solid var(--color-sidebar-border);
+    border-left: 1px solid $sidebar-border;
   }
 
   &__background {
@@ -32,7 +30,7 @@
     width: 100%;
     height: 100%;
 
-    background-color: var(--color-sidebar-background-bg);
+    background-color: $sidebar-background-bg;
 
     opacity: 0.5;
 

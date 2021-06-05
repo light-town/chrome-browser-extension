@@ -1,0 +1,27 @@
+.ui-theme_light {
+  --color-item-group-title: #{$gray-650};
+}
+
+.ui-theme_dark {
+  --color-item-group-title: #{$white};
+}
+
+.item-group {
+  margin-bottom: 1.25rem;
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+
+    margin-bottom: 1rem;
+
+    padding: 0 1rem;
+
+    color: var(--color-item-group-title);
+
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

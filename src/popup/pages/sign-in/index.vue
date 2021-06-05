@@ -21,7 +21,7 @@
         :placeholder="$t('Enter your Master Password')"
         class="sign-in-page__input"
         :readonly="loading"
-        @focus.native="setInputFieldBlur"
+        @focus.native="setInputFieldFocus"
         @blur.native="setInputFieldBlur"
         @keydown.enter.native="signIn"
       />

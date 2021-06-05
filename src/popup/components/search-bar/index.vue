@@ -1,6 +1,11 @@
 <template>
-  <ui-grid align-items="center" justify="space-between" class="search-bar">
-    <ui-grid align-items="center">
+  <ui-grid
+    align-items="center"
+    justify="space-between"
+    class="search-bar"
+    :contained="true"
+  >
+    <ui-grid align-items="center" :contained="true">
       <loupe-icon class="search-bar__input-icon" />
       <ui-input
         ref="input"
@@ -11,8 +16,9 @@
         tabindex="-1"
       />
     </ui-grid>
-    <ui-grid align-items="center" class="search-bar__tools">
+    <ui-grid align-items="center" class="search-bar__tools" :contained="true">
       <ui-button
+        ref="button"
         variant="text"
         class="search-bar__settings-btn"
         @click="toggleSidebarShowing"
@@ -83,6 +89,8 @@ export default Vue.extend({
       setSearchQuery: vaultItemsActionTypes.SET_SEARCH_QUERY,
     }),
     toggleSidebarShowing() {
+      this.$refs.button.$el.blur();
+
       this.isSidebarShow = !this.isSidebarShow;
     },
   },

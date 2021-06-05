@@ -1,11 +1,11 @@
 <template>
-  <ui-grid direction="column" class="h-full">
+  <ui-grid direction="column" class="ui-h-full">
     <search-bar />
-    <ui-grid align-items="center" class="h-full overflow-auto">
+    <ui-grid class="ui-h-full ui-overflow-auto">
       <slot name="sidebar">
         <list-bar />
       </slot>
-      <ui-grid direction="column" class="default-page-layout__body">
+      <ui-grid direction="column" class="ui-h-full default-page-layout__body">
         <slot name="body"></slot>
       </ui-grid>
     </ui-grid>
@@ -29,15 +29,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-#app[data-theme-mode="light"] {
-  --color-default-page-layout-body-bg: var(--color-gray-75);
-}
+$default-page-layout-body-bg: $gray-75;
 
 .default-page-layout__body {
-  background-color: var(--color-default-page-layout-body-bg);
+  @include ui-w-full;
+  @include ui-overflow-auto;
 
-  height: 100%;
-
-  overflow: auto;
+  background-color: $default-page-layout-body-bg;
 }
 </style>
