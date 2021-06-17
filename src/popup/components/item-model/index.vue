@@ -10,7 +10,7 @@
         justify="space-between"
         class="item-model__header"
       >
-        <ui-grid align-items="center">
+        <ui-grid align-items="center" class="item-model__header-avatar">
           <ui-avatar
             :name="currentVaultItem.overview.name"
             :alt="currentVaultItem.overview.name"
@@ -18,7 +18,7 @@
             class="item-model__header-icon"
             :title="currentVaultItem.overview.name"
           />
-          <ui-grid direction="column" class="w-auto inline-flex">
+          <ui-grid direction="column" class="overflow-hidden">
             <p
               class="item-model__header-title"
               :title="currentVaultItem.overview.name"

@@ -5,6 +5,10 @@ $item-model-body-header-desc: $gray-450;
 
 .item-model {
   &__header {
+    &-avatar {
+      width: 70%;
+    }
+
     &-icon {
       flex-shrink: 0;
 
