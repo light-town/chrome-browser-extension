@@ -34,7 +34,11 @@
     },
     {
       "js": ["content/proposal/index.js"],
-      "matches": ["http://127.0.0.1:3000/sign-in/pwd"],
+      "matches": [
+        "http://127.0.0.1/**/*",
+        "http://127.0.0.1:3000/**/*",
+        "https://www.light-town.space/**/*"
+      ],
       "run_at": "document_end"
     }
   ],

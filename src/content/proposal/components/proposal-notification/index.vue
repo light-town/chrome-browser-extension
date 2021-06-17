@@ -47,12 +47,13 @@
 <script lang="ts">
 import Vue from "vue";
 /// @ts-ignore
-import { UiGrid, UiButton } from "@light-town/ui";
+import { UiThemeProvider, UiGrid, UiButton } from "@light-town/ui";
 import acceptProposalHelper from "~/content/proposal/helpers/accept-proposal.helper";
 
 export default Vue.extend({
   name: "ProposalNotification",
   components: {
+    UiThemeProvider,
     UiGrid,
     UiButton,
   },
@@ -61,9 +62,6 @@ export default Vue.extend({
       show: true,
       loading: false,
     };
-  },
-  created() {
-    this.$i18n.locale = window.navigator.language;
   },
   methods: {
     acceptProposal() {
@@ -74,6 +72,8 @@ export default Vue.extend({
         .finally(() => (this.loading = false));
     },
     close() {
+      window.postMessage({ type: "LT_EXT_AUTH_END" });
+
       this.show = false;
     },
   },

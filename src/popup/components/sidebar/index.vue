@@ -7,7 +7,10 @@
             <lock-icon />
           </template>
         </sidebar-menu-item>
-        <sidebar-menu-item :title="$t('Settings')"></sidebar-menu-item>
+        <sidebar-menu-item
+          :title="$t('Settings')"
+          @click="openSettingsPage"
+        ></sidebar-menu-item>
       </sidebar-menu>
     </popup>
   </portal>
@@ -57,6 +60,9 @@ export default Vue.extend({
       if (e.key === "Escape") {
         this.close();
       }
+    },
+    openSettingsPage() {
+      chrome.tabs.create({ url: "/options/index.html", active: true });
     },
   },
 });

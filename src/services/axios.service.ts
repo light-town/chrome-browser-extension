@@ -5,11 +5,12 @@ import { lazyInject, TYPES } from './container';
 import LoggerService from './logger.service';
 import ProtectedMemoryService from './protected-memory.service';
 import * as StoredDataTypesEnum from "../enums/stored-data-types.enum";
+import { BACKEND_URL } from '~/env';
 
 @injectable()
 export class AxiosService {
   #instance: AxiosInstance;
-  #url = "http://127.0.0.1:8080/v1/api";
+  #url = BACKEND_URL;
   #refreshed = false;
 
   /// @ts-ignore

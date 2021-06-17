@@ -86,13 +86,13 @@ module.exports = {
         options: {
           loaders: {
             scss: [
-              MiniCssExtractPlugin.loader,
+              "vue-style-loader",
               "css-loader",
               "postcss-loader",
               "sass-loader",
             ],
             sass: [
-              MiniCssExtractPlugin.loader,
+              "vue-style-loader",
               "css-loader",
               "postcss-loader",
               "sass-loader?indentedSyntax",
@@ -103,12 +103,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+        use: ["vue-style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          "vue-style-loader",
           "css-loader",
           "postcss-loader",
           {
@@ -127,7 +127,7 @@ module.exports = {
       {
         test: /\.sass$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          "vue-style-loader",
           "css-loader",
           "postcss-loader",
           "sass-loader?indentedSyntax",

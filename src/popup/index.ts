@@ -11,6 +11,8 @@ import i18n from "../locales/i18n";
 import * as accountActionTypes from "./store/account/types";
 import * as vaultItemsActionTypes from "./store/vault-items/types";
 import * as MessageTypesEnum from "~/enums/message-types.enum";
+import createTabHelper from "~/background/helpers/create-tab.helper";
+import { FRONTEND_SIGN_IN_URL } from "../env";
 
 Vue.use(PortalVue);
 
@@ -43,6 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     if (currentAccount?.error) {
+      await createTabHelper({
+        url: FRONTEND_SIGN_IN_URL,
+        active: true,
+      });
       window.close();
       return;
     }

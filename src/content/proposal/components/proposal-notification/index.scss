@@ -1,15 +1,16 @@
-@import "@light-town/ui/src/scss/main";
-
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
 * {
   user-select: none !important;
 
   &:focus {
     outline-style: none !important;
   }
+}
+
+:root {
+  --color-ext-modal-bg: #{$black};
+  --color-ext-notification-bg: #{$white};
+  --color-ext-notification-title: #{$gray-650};
+  --color-ext-notification-desc: #{$gray-550};
 }
 
 .lt_ext_modal {
@@ -32,7 +33,7 @@
     width: 100%;
     height: 100vh;
 
-    background-color: var(--color-black);
+    background-color: var(--color-ext-modal-bg);
     opacity: 0.6;
   }
 
@@ -56,7 +57,7 @@
 }
 
 .lt_ext_notification {
-  background-color: var(--color-white);
+  background-color: var(--color-ext-notification-bg);
 
   border-radius: 4px;
 
@@ -80,14 +81,14 @@
     font-size: 1rem;
     font-weight: 500;
 
-    color: var(--color-gray-650);
+    color: var(--color-ext-notification-title);
   }
 
   &__desc {
     font-size: 0.875rem;
     font-weight: 400;
 
-    color: var(--color-gray-550);
+    color: var(--color-ext-notification-desc);
   }
 
   &__btn {

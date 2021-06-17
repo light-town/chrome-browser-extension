@@ -21,10 +21,7 @@ import VaultItems from "~/services/api/vault-items";
 import Vaults from "~/services/api/vaults";
 import Runtime from "./runtime";
 import setIconHelper from "./helpers/set-icon.helper";
-import sendMessage from "~/tools/sendMessage";
 import AutoFillService from "~/services/autofill.service";
-import getActiveTab from "./helpers/get-active.tab.helper";
-import postMessage from "~/tools/postMessage";
 import lockAppHelper from "./helpers/lock-app.helper";
 import SettingsService from "~/services/settings.service";
 import createDefaultSettingsHelper from "./helpers/create-default-settings.helper";
@@ -61,12 +58,12 @@ async function bootstrap() {
 
   const authService = container.get<AuthService>(TYPES.AuthService);
   const runtime = container.get<Runtime>(TYPES.Runtime);
-  // const storageService = container.get<StorageService>(TYPES.StorageService);
+  const storageService = container.get<StorageService>(TYPES.StorageService);
   const deviceService = container.get<DeviceService>(TYPES.DeviceService);
   const loggerService = container.get<LoggerService>(TYPES.LoggerService);
   const settingsService = container.get<SettingsService>(TYPES.SettingsService);
 
-  // await storageService.clear();
+  await storageService.clear();
 
   const existedSettings = await settingsService.getAll();
 
